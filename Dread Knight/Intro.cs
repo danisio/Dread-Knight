@@ -20,7 +20,7 @@ namespace Dread_Knight
             {
                 Console.Clear();
                 Console.WriteLine("── Hello, Doncho!\n── Hello, Dread Knight!\n── Do you want to play with me?");
-                Console.WriteLine("press: Y/N");
+                Console.WriteLine("   press: Y/N");
                 pressedKey = Console.ReadKey();
             }
             Console.Clear();

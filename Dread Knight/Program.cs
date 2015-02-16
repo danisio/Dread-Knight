@@ -28,7 +28,8 @@ namespace Dread_Knight
             int numberOfPlayers = Intro.Menu();
 
             if (numberOfPlayers == 1)
-                Console.WriteLine(" ('0.0)-=╦╤── ");
+                //Console.WriteLine(" ('0.0)-=╦╤── ");
+                SinglePlayer.SinglePlay();
             else
             {
                 Console.WriteLine(" ('0.0)-=╦╤── ");
