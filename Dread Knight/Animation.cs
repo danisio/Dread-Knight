@@ -35,9 +35,9 @@ namespace Dread_Knight
             Console.WriteLine("      |           |                  |           |              |          |           |  \\              ");
             Console.WriteLine("      |           |_[ ]_[ ]__[ ]_[ ]_|           |_[ ]_[ ]_[ ]_[ ]_[ ]_[ ]_|      []   |___\\             ");
             Console.WriteLine("      |           |                  |           |                         |           |/+\\|             ");
-            Console.WriteLine("      |           |       /\\/\\       |           |                         |           ||+||             ");
-            Console.WriteLine("      |     _     |        /\\        |     _     |      []         []      |           ||+||             ");
-            Console.WriteLine("      |    /+\\    |        \\/        |    /+\\    |                         |           |^^^|             ");
+            Console.WriteLine("      |           |                  |           |                         |           ||+||             ");
+            Console.WriteLine("      |     _     |                  |     _     |      []         []      |           ||+||             ");
+            Console.WriteLine("      |    /+\\    |                  |    /+\\    |                         |           |^^^|             ");
             Console.WriteLine("      |   |+|+|   |                  |   |+|+|   |                         |           |   |             ");
             Console.WriteLine("      |   |+|+|   |      _,--,_      |   |+|+|   |                         |           |   |             ");
             Console.WriteLine("      |   |+|+|   |     / |  | \\     |   |+|+|   |                         |           |  /              ");
@@ -46,6 +46,15 @@ namespace Dread_Knight
             Console.WriteLine("      |           |     | |  | |     |           |                         |           |                 ");
             Console.WriteLine("      |           |     | |  | |     |           |                         |           |                 ");
             Console.WriteLine("`^^^^^^^^^^^`^^^^`^^^`^^^^^^^^^^^^`^`^`^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^`^^^`^^^^^^^`^^^^`^^^`^^^^^^^^`^^^^`^^^`^^^^");
+
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.SetCursorPosition(26, 21);
+            Console.Write("/\\/\\");
+            Console.SetCursorPosition(27, 22);
+            Console.Write("/\\");
+            Console.SetCursorPosition(27, 23);
+            Console.Write("\\/");
+            Console.ForegroundColor = ConsoleColor.Black;
         }
 
         internal static void FirstStage()
