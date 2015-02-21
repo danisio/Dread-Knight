@@ -62,7 +62,7 @@ namespace Dread_Knight
                 Castle();
                 PrintOnPosition(dreadNight.x, dreadNight.y, dreadNight.s, dreadNight.color);
                 dreadNight.x = dreadNight.x - 1;
-                Thread.Sleep(1);
+                Thread.Sleep(10);
             }
         }
     }
