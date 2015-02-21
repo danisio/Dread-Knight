@@ -23,6 +23,7 @@ namespace Dread_Knight
         static List<Object> shots = new List<Object>();
 
         static int score = 0;
+        static int sizeOfDrawField = 4;
         //static int livesCount = 5;
 
         internal static void SinglePlay()
@@ -49,6 +50,7 @@ namespace Dread_Knight
                     AddNewEnemy();
                     step = 0;
                 }
+
                 step++;
 
                 //move our player and shoot(key pressed)
@@ -72,7 +74,7 @@ namespace Dread_Knight
                 RedrawPlayfield();
 
                 //draw info
-                //PrintInfoOnPosition();
+                PrintInfoOnPosition();
 
                 //slow down program
                 Thread.Sleep(100);
@@ -125,11 +127,10 @@ namespace Dread_Knight
         {
             Object newEnemy = new Object();
             newEnemy.x = Console.WindowWidth - 1;
-            newEnemy.y = randomGenerator.Next(0, Console.WindowHeight);
+            newEnemy.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
             newEnemy.str = "%";
             newEnemy.color = ConsoleColor.Yellow;
             enemies.Add(newEnemy);
-
         }
 
         static void Shoot()
@@ -146,7 +147,7 @@ namespace Dread_Knight
         {
             if (pressedKey.Key == ConsoleKey.UpArrow)
             {
-                if (ourPlayer.y - 1 >= 0)
+                if (ourPlayer.y - 1 >= sizeOfDrawField)
                 {
                     ourPlayer.y = ourPlayer.y - 1;
                 }
@@ -182,7 +183,6 @@ namespace Dread_Knight
                     newListOfShots.Add(newShot);
                 }
             }
-
 
             shots = newListOfShots;
         }
@@ -236,6 +236,16 @@ namespace Dread_Knight
             Console.SetCursorPosition(x, y);
             Console.ForegroundColor = color;
             Console.Write(str);
+        }
+
+        static void PrintInfoOnPosition()
+        {
+            string line = new string('-', Console.WindowWidth);
+            PrintOnPosition(0, 1, "Score " + score, ConsoleColor.Black);
+            PrintOnPosition(0, 2, "Lives ", ConsoleColor.Black);
+            PrintOnPosition(Console.WindowWidth / 2, 0, "Level ", ConsoleColor.Black);
+            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.Black);
+            PrintOnPosition(0, 3, "" + line, ConsoleColor.Black);
         }
     }
 }
