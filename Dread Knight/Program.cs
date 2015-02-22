@@ -34,6 +34,7 @@ namespace Dread_Knight
             {
                 Console.WriteLine(" ('0.0)-=╦╤── ");
                 Console.WriteLine(" ('■_■)-=╦╤── ");
+                MultyPlayer.MultyPlay();
             }
         }
     }

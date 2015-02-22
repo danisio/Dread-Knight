@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Dread_Knight
 {
-    class SinglePlayer
+    class MultyPlayer
     {
         struct Object
         {
@@ -19,6 +19,7 @@ namespace Dread_Knight
         }
 
         static Object ourPlayer = new Object();
+        static Object secondPlayer = new Object();
         static Random randomGenerator = new Random();
         static List<Object> enemies = new List<Object>();
         static List<Object> shots = new List<Object>();
@@ -44,7 +45,7 @@ namespace Dread_Knight
 
         //static int livesCount = 5;
 
-        internal static void SinglePlay()
+        internal static void MultyPlay()
         {
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -53,6 +54,12 @@ namespace Dread_Knight
             ourPlayer.y = Console.WindowHeight / 2;
             ourPlayer.str = " ('0.0)-=╦╤── ";
             ourPlayer.color = ConsoleColor.White;
+
+            //make second Player
+            secondPlayer.x = 0;
+            secondPlayer.y = Console.WindowHeight / 2 + 1;
+            secondPlayer.str = " ('■_■)-=╦╤── ";
+            secondPlayer.color = ConsoleColor.White;
 
 
             while (true)
@@ -74,6 +81,7 @@ namespace Dread_Knight
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
                     MoveOurPlayer(pressedKey);
+                    MoveSecondPlayer(pressedKey);
                 }
 
                 MoveShots();
@@ -103,7 +111,7 @@ namespace Dread_Knight
             {
                 for (int j = 0; j < shots.Count; j++)
                 {
-                    if ( (enemies[i].x == shots[j].x && enemies[i].y == shots[j].y) ||  //check current positions of enemy and shot 
+                    if ((enemies[i].x == shots[j].x && enemies[i].y == shots[j].y) ||  //check current positions of enemy and shot 
                          (enemies[i].x == shots[j].x + 1 && enemies[i].y == shots[j].y))  //same enemy and next position of the shot (avoids mismatch shot and enemy)
                     {
                         enemiesToRemove.Add(enemies[i]);
@@ -118,7 +126,7 @@ namespace Dread_Knight
                                 maxPointsForCurrentLevel = levelsData[currentLevel - 1, 1];
                                 speed += acceleration;              //every next level will be faster
                                 enemiesPause--;                     //every next level will be added more enemies 
-                                
+
                                 if (currentLevel == maxLevel)
                                 {
                                     Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -163,14 +171,24 @@ namespace Dread_Knight
             enemies.Add(newEnemy);
         }
 
-        static void Shoot()
+        static void ShootFirstPlayer()
         {
-            Object newShot = new Object();
-            newShot.x = ourPlayer.x + 14;   //14 = size of our player
-            newShot.y = ourPlayer.y;
-            newShot.str = "Ѿ";
-            newShot.color = ConsoleColor.Black;
-            shots.Add(newShot);
+            Object newShotFP = new Object();
+            newShotFP.x = ourPlayer.x + 14;   //14 = size of our player
+            newShotFP.y = ourPlayer.y;
+            newShotFP.str = "Ѿ";
+            newShotFP.color = ConsoleColor.Black;
+            shots.Add(newShotFP);
+        }
+
+        static void ShootSecondPlayer()
+        {
+            Object newShotSP = new Object();
+            newShotSP.x = secondPlayer.x + 14;   //14 = size of our player
+            newShotSP.y = secondPlayer.y;
+            newShotSP.str = "Ѿ";
+            newShotSP.color = ConsoleColor.Black;
+            shots.Add(newShotSP);
         }
 
         static void MoveOurPlayer(ConsoleKeyInfo pressedKey)
@@ -192,7 +210,30 @@ namespace Dread_Knight
             }
             else if (pressedKey.Key == ConsoleKey.Spacebar)
             {
-                Shoot();
+                ShootFirstPlayer();
+            }
+        }
+
+        static void MoveSecondPlayer(ConsoleKeyInfo pressedKey)
+        {
+            if (pressedKey.Key == ConsoleKey.W)
+            {
+                if (secondPlayer.y - 1 >= sizeOfDrawField)
+                {
+                    secondPlayer.y = secondPlayer.y - 1;
+                }
+            }
+            else if (pressedKey.Key == ConsoleKey.S)
+            {
+                if (secondPlayer.y + 1 < Console.WindowHeight)
+                {
+                    secondPlayer.y = secondPlayer.y + 1;
+
+                }
+            }
+            else if (pressedKey.Key == ConsoleKey.Tab)
+            {
+                ShootSecondPlayer();
             }
         }
 
@@ -208,7 +249,14 @@ namespace Dread_Knight
                 newShot.str = oldShot.str;
                 newShot.color = oldShot.color;
 
-                if (newShot.x < Console.WindowWidth)
+                Object oldSPShot = shots[i];
+                Object newSPShot = new Object();
+                newSPShot.x = oldSPShot.x + 1;
+                newSPShot.y = oldSPShot.y;
+                newSPShot.str = oldSPShot.str;
+                newSPShot.color = oldSPShot.color;
+
+                if (newShot.x < Console.WindowWidth & newSPShot.x < Console.WindowWidth)
                 {
                     newListOfShots.Add(newShot);
                 }
@@ -229,7 +277,7 @@ namespace Dread_Knight
                 newEnemy.str = oldEnemy.str;
                 newEnemy.color = oldEnemy.color;
 
-                if (newEnemy.x == ourPlayer.x + 14 && newEnemy.y == ourPlayer.y)
+                if ((newEnemy.x == ourPlayer.x + 14 && newEnemy.y == ourPlayer.y) || (newEnemy.x == secondPlayer.x + 14 && newEnemy.y == secondPlayer.y))
                 {
                     //livesCount--;
                     Console.Beep(1000, 50);
@@ -251,6 +299,7 @@ namespace Dread_Knight
         static void RedrawPlayfield()
         {
             PrintOnPosition(ourPlayer.x, ourPlayer.y, ourPlayer.str, ourPlayer.color);
+            PrintOnPosition(secondPlayer.x, secondPlayer.y, secondPlayer.str, secondPlayer.color);
 
             foreach (Object enemy in enemies)
             {
