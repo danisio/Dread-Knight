@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,8 +23,25 @@ namespace Dread_Knight
         static List<Object> enemies = new List<Object>();
         static List<Object> shots = new List<Object>();
 
+        static int[,] levelsData = //array with data about levels -> level 1-100 points, level 2-200 points etc.
+                    {{1, 100},
+                     {2, 200},
+                     {3, 300},
+                     {4, 400},
+                     {5, 500}};
+
+        static int currentLevel = levelsData[0, 0]; //set level 1 when the game starts
+        static int maxPointsForCurrentLevel = levelsData[currentLevel - 1, 1]; //set max points for current level -->100
+        static int maxLevel = levelsData[4, 0]; //set max level --> 5
+
         static int score = 0;
         static int sizeOfDrawField = 4;
+        static int speed = 0; //used for acceleration of the game 
+        static int acceleration = 30;
+
+        static int step = 0;
+        static int enemiesPause = 5;
+
         //static int livesCount = 5;
 
         internal static void SinglePlay()
@@ -36,15 +54,13 @@ namespace Dread_Knight
             ourPlayer.str = " ('0.0)-=╦╤── ";
             ourPlayer.color = ConsoleColor.White;
 
-            int step = 0;
-            int enemiesPause = 5;
 
             while (true)
             {
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
 
-                //add new enemy every 3 steps
+                //add new enemy every 5 steps
                 if (step % enemiesPause == 0)
                 {
                     AddNewEnemy();
@@ -64,9 +80,6 @@ namespace Dread_Knight
 
                 MoveEnemies();
 
-                //check if an enemy is hitted by shot
-                CollisionShotAndEnemy();
-
                 //clear the console - old positions
                 Console.Clear();
 
@@ -77,7 +90,7 @@ namespace Dread_Knight
                 PrintInfoOnPosition();
 
                 //slow down program
-                Thread.Sleep(100);
+                Thread.Sleep(150 - speed);
             }
         }
 
@@ -90,11 +103,28 @@ namespace Dread_Knight
             {
                 for (int j = 0; j < shots.Count; j++)
                 {
-                    if (enemies[i].x == shots[j].x && enemies[i].y == shots[j].y)
+                    if ( (enemies[i].x == shots[j].x && enemies[i].y == shots[j].y) ||  //check current positions of enemy and shot 
+                         (enemies[i].x == shots[j].x + 1 && enemies[i].y == shots[j].y))  //same enemy and next position of the shot (avoids mismatch shot and enemy)
                     {
                         enemiesToRemove.Add(enemies[i]);
                         shotsToRemove.Add(shots[j]);
                         score += 10;
+
+                        if (score >= maxPointsForCurrentLevel)
+                        {
+                            if (currentLevel + 1 <= maxLevel)       // verify whether the last level is reached
+                            {
+                                currentLevel += 1;
+                                maxPointsForCurrentLevel = levelsData[currentLevel - 1, 1];
+                                speed += acceleration;              //every next level will be faster
+                                enemiesPause--;                     //every next level will be added more enemies 
+                                
+                                if (currentLevel == maxLevel)
+                                {
+                                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -136,7 +166,7 @@ namespace Dread_Knight
         static void Shoot()
         {
             Object newShot = new Object();
-            newShot.x = ourPlayer.x + 1 + 14;   //14 = size of our player
+            newShot.x = ourPlayer.x + 14;   //14 = size of our player
             newShot.y = ourPlayer.y;
             newShot.str = "Ѿ";
             newShot.color = ConsoleColor.Black;
@@ -241,9 +271,10 @@ namespace Dread_Knight
         static void PrintInfoOnPosition()
         {
             string line = new string('-', Console.WindowWidth);
+            PrintOnPosition(0, 0, "Player 1", ConsoleColor.Black);
             PrintOnPosition(0, 1, "Score " + score, ConsoleColor.Black);
             PrintOnPosition(0, 2, "Lives ", ConsoleColor.Black);
-            PrintOnPosition(Console.WindowWidth / 2, 0, "Level ", ConsoleColor.Black);
+            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.Black);
             PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.Black);
             PrintOnPosition(0, 3, "" + line, ConsoleColor.Black);
         }
