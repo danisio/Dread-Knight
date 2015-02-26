@@ -88,22 +88,15 @@ namespace Dread_Knight
 
                 MoveShots();
 
-                if (isMulti)
-                {
-                    MoveEnemies(true);
-                }
-                else
-                {
-                    MoveEnemies(false);
-                }
+                MoveEnemies(isMulti);
 
                 Console.Clear();
-                
+
                 //draw new positions
                 RedrawPlayfield();
 
                 //draw info
-                PrintInfoOnPosition();
+                PrintInfoOnPosition(isMulti);
 
                 //slow down program
                 Thread.Sleep(150 - speed);
@@ -395,13 +388,18 @@ namespace Dread_Knight
             Console.Write(str);
         }
 
-        static void PrintInfoOnPosition()
+        static void PrintInfoOnPosition(bool isMulti)
         {
             string line = new string('-', Console.WindowWidth);
             PrintOnPosition(0, 0, "Player 1", ConsoleColor.Black);
-            PrintOnPosition(0, 1, "Score " + score, ConsoleColor.Black);
             PrintOnPosition(0, 2, "Lives ", ConsoleColor.Black);
+            if (isMulti)
+            {
+                PrintOnPosition(Console.WindowWidth - 8, 0, "Player 2", ConsoleColor.Black);
+                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.Black);
+            }
             PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.Black);
+            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.Black);
             PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.Black);
             PrintOnPosition(0, 3, "" + line, ConsoleColor.Black);
         }
