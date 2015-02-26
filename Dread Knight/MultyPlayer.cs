@@ -163,11 +163,22 @@ namespace Dread_Knight
 
         static void AddNewEnemy()
         {
+            //  How enemies would look
+            string[] enemyLooks = new string[] { ".\\/.", ".\\,,/.", "o\\_/o", "*\\)_(/*", "+|,,,|+", "'\\]..[/'", "(niki=<", "<<-ivo[#", "-=evlogi{" };
+
             Object newEnemy = new Object();
             newEnemy.x = Console.WindowWidth - 1;
             newEnemy.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
-            newEnemy.str = "%";
-            newEnemy.color = ConsoleColor.Yellow;
+            newEnemy.str = enemyLooks[randomGenerator.Next(0, enemyLooks.Length)];
+            ConsoleColor[] enemyColors = 
+            {
+                ConsoleColor.Yellow, 
+                ConsoleColor.DarkGreen, 
+                ConsoleColor.Red,
+                ConsoleColor.DarkMagenta,
+                ConsoleColor.Blue
+            };
+            newEnemy.color = enemyColors[randomGenerator.Next(0, enemyColors.Length)];
             enemies.Add(newEnemy);
         }
 
@@ -277,20 +288,51 @@ namespace Dread_Knight
                 newEnemy.str = oldEnemy.str;
                 newEnemy.color = oldEnemy.color;
 
-                if ((newEnemy.x == ourPlayer.x + 14 && newEnemy.y == ourPlayer.y) || (newEnemy.x == secondPlayer.x + 14 && newEnemy.y == secondPlayer.y))
-                {
-                    //livesCount--;
-                    Console.Beep(1000, 50);
-                    enemies.Clear();
-                    shots.Clear();
+                bool collisionPlayerEnemy = false;
 
-                    // console.writeline environment.exit(0)
+                for (int j = 0; j < ourPlayer.str.Length; j++)                                //
+                {                                                                             //
+                    if ((newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y) || 
+                        (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
+                    {                                                                         //
+                        //livesCount--;                                                       //
+                        Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
+                        enemies.Clear();                                                      //
+                        shots.Clear();                                                        //
+                        collisionPlayerEnemy = true;                                          //
+                        break;                                                                //
+                        // console.writeline environment.exit(0)                              //
+                    }                                                                         //
                 }
+
+                if (collisionPlayerEnemy)
+                {
+                    break;
+                }
+
 
                 if (newEnemy.x > 0)
                 {
                     newListOfEnemies.Add(newEnemy);
                 }
+                else if (newEnemy.x == 0)                               //
+                {                                                       //
+                    newEnemy.x++;                                       //
+                                                                        //  
+                    string tempNewEnemy = string.Empty;                 //  
+                    for (int k = 1; k < newEnemy.str.Length; k++)       //  
+                    {                                                   //
+                        tempNewEnemy += newEnemy.str[k];                //
+                    }                                                   //  Checks if the enemy reached the end of the field.
+                                                                        //  If yes, its string is gradually trimmed from its beginning.
+                    if (newEnemy.str.Length == 0)                       //
+                    {                                                   //
+                        continue;                                       //
+                    }                                                   //
+                                                                        //
+                    newEnemy.str = tempNewEnemy;                        //
+                    newListOfEnemies.Add(newEnemy);                     //
+                }                              
             }
 
             enemies = newListOfEnemies;
@@ -303,7 +345,7 @@ namespace Dread_Knight
 
             foreach (Object enemy in enemies)
             {
-                PrintOnPosition(enemy.x, enemy.y, enemy.str, enemy.color);
+                PrintOnPosition(enemy.x, enemy.y, enemy.str, enemy.color, true);
             }
             foreach (Object shot in shots)
             {
@@ -311,10 +353,25 @@ namespace Dread_Knight
             }
         }
 
-        static void PrintOnPosition(int x, int y, string str, ConsoleColor color = ConsoleColor.Gray)
+        static void PrintOnPosition(int x, int y, string str, ConsoleColor color = ConsoleColor.Gray, bool isEnemy = false)
         {
             Console.SetCursorPosition(x, y);
             Console.ForegroundColor = color;
+
+            if (isEnemy)                                                  //    
+            {                                                             //    
+                string tempString = str;                                  //    
+                int tempLenght = (Console.WindowWidth - 1) - x;           //    
+                if (tempLenght < tempString.Length)                       //    
+                {                                                         //    Fix for the bug with newly generated enemy's string-tail showing on the left side of the field.
+                    str = string.Empty;                                   //    
+                    for (int i = 0; i < tempLenght; i++)                  //    
+                    {                                                     //    
+                        str += tempString[i];                             //    
+                    }                                                     //    
+                }                                                         //    
+            }
+
             Console.Write(str);
         }
 
