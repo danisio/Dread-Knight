@@ -307,7 +307,13 @@ namespace Dread_Knight
                     {                                                                             //
                         if ((newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y) ||
                             (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
-                        {                                                                         //
+                        {
+                            if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
+                                playerOneLives--;
+                            if (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y)
+                                playerTwoLives--;
+                            if (playerOneLives == 0 || playerTwoLives == 0)
+                                End.GameOver(score);
                             //livesCount--;                                                       //
                             Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
                             enemies.Clear();                                                      //
@@ -324,7 +330,10 @@ namespace Dread_Knight
                     for (int j = 0; j < firstPlayer.str.Length; j++)                                //
                     {                                                                             //
                         if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
-                        {                                                                         //
+                        {
+                            playerOneLives--;
+                            if (playerOneLives == 0)
+                                End.GameOver(score);
                             //livesCount--;                                                       //
                             Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
                             enemies.Clear();                                                      //
