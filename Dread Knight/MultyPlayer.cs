@@ -41,7 +41,7 @@ namespace Dread_Knight
         static int acceleration = 30;
 
         static int step = 0;
-        static int enemiesPause = 5;
+        static int enemiesPause = 13;
 
         //static int livesCount = 5;
 
@@ -74,7 +74,7 @@ namespace Dread_Knight
                     step = 0;
                 }
 
-                step++;
+                
 
                 //move our player and shoot(key pressed)
                 while (Console.KeyAvailable)
