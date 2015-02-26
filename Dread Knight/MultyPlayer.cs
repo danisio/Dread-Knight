@@ -18,11 +18,12 @@ namespace Dread_Knight
             public ConsoleColor color;
         }
 
-        static Object ourPlayer = new Object();
+        static Object firstPlayer = new Object();
         static Object secondPlayer = new Object();
         static Random randomGenerator = new Random();
         static List<Object> enemies = new List<Object>();
         static List<Object> shots = new List<Object>();
+        static List<Object> rocks = new List<Object>();
 
         static int[,] levelsData = //array with data about levels -> level 1-100 points, level 2-200 points etc.
                     {{1, 100},
@@ -40,8 +41,10 @@ namespace Dread_Knight
         static int speed = 0; //used for acceleration of the game 
         static int acceleration = 30;
 
-        static int step = 0;
+        static int stepEnemy = 0;
         static int enemiesPause = 13;
+        static int stepRocks = 0;
+        static int rocksPause = 30;
 
         //static int livesCount = 5;
         static int playerOneLives = 5;
@@ -49,13 +52,13 @@ namespace Dread_Knight
 
         internal static void MultyPlay(bool isMulti = false)
         {
-            Console.OutputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.Unicode;
 
-            //make our player
-            ourPlayer.x = 0;
-            ourPlayer.y = Console.WindowHeight / 2;
-            ourPlayer.str = " ('0.0)-=╦╤── ";
-            ourPlayer.color = ConsoleColor.Yellow;
+            //make first player
+            firstPlayer.x = 0;
+            firstPlayer.y = Console.WindowHeight / 2;
+            firstPlayer.str = " ('0.0)-=╦╤── ";
+            firstPlayer.color = ConsoleColor.Yellow;
 
             //make second Player
             if (isMulti)
@@ -71,26 +74,37 @@ namespace Dread_Knight
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
 
-                //add new enemy every 5 steps
-                if (step % enemiesPause == 0)
+                //add new enemy every "enemiesPause" step
+                if (stepEnemy % enemiesPause == 0)
                 {
                     AddNewEnemy();
-                    step = 0;
+                    stepEnemy = 0;
                 }
 
-                step++;
+                stepEnemy++;
+
+                //add new rock every "rocksPause" step
+                if (stepRocks % rocksPause == 0)
+                {
+                    AddNewRock();
+                    stepRocks = 0;
+                }
+
+                stepRocks++;
 
                 //move our player and shoot(key pressed)
                 while (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
-                    MoveOurPlayer(pressedKey);
+                    MoveFirstPlayer(pressedKey);
                     MoveSecondPlayer(pressedKey);
                 }
 
                 MoveShots();
 
                 MoveEnemies(isMulti);
+
+                MoveRocks();
 
                 Console.Clear();
 
@@ -181,50 +195,51 @@ namespace Dread_Knight
                 ConsoleColor.Magenta,
                 ConsoleColor.White
             };
+
             newEnemy.color = enemyColors[randomGenerator.Next(0, enemyColors.Length)];
             enemies.Add(newEnemy);
         }
 
-        static void ShootFirstPlayer()
+        static void AddNewRock()
         {
-            Object newShotFP = new Object();
-            newShotFP.x = ourPlayer.x + ourPlayer.str.Length - 2;
-            newShotFP.y = ourPlayer.y;
-            newShotFP.str = "Ѿ";
-            newShotFP.color = ConsoleColor.Black;
-            shots.Add(newShotFP);
+            Object newRock = new Object();
+            newRock.x = Console.WindowWidth - 1;
+            newRock.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
+            newRock.str = "▓"; //█
+            newRock.color = ConsoleColor.Red;
+            rocks.Add(newRock);
         }
 
-        static void ShootSecondPlayer()
+        static void Shoot(Object player)
         {
-            Object newShotSP = new Object();
-            newShotSP.x = secondPlayer.x + secondPlayer.str.Length - 2;
-            newShotSP.y = secondPlayer.y;
-            newShotSP.str = "Ѿ";
-            newShotSP.color = ConsoleColor.Black;
-            shots.Add(newShotSP);
+            Object newShot = new Object();
+            newShot.x = player.x + player.str.Length;
+            newShot.y = player.y;
+            newShot.str = "●";
+            newShot.color = ConsoleColor.Yellow;
+            shots.Add(newShot);
         }
 
-        static void MoveOurPlayer(ConsoleKeyInfo pressedKey)
+        static void MoveFirstPlayer(ConsoleKeyInfo pressedKey)
         {
             if (pressedKey.Key == ConsoleKey.UpArrow)
             {
-                if (ourPlayer.y - 1 >= sizeOfDrawField)
+                if (firstPlayer.y - 1 >= sizeOfDrawField)
                 {
-                    ourPlayer.y = ourPlayer.y - 1;
+                    firstPlayer.y = firstPlayer.y - 1;
                 }
             }
             else if (pressedKey.Key == ConsoleKey.DownArrow)
             {
-                if (ourPlayer.y + 1 < Console.WindowHeight)
+                if (firstPlayer.y + 1 < Console.WindowHeight)
                 {
-                    ourPlayer.y = ourPlayer.y + 1;
+                    firstPlayer.y = firstPlayer.y + 1;
 
                 }
             }
             else if (pressedKey.Key == ConsoleKey.Spacebar)
             {
-                ShootFirstPlayer();
+                Shoot(firstPlayer);
             }
         }
 
@@ -247,7 +262,7 @@ namespace Dread_Knight
             }
             else if (pressedKey.Key == ConsoleKey.Tab)
             {
-                ShootSecondPlayer();
+                Shoot(secondPlayer);
             }
         }
 
@@ -286,18 +301,18 @@ namespace Dread_Knight
 
                 bool collisionPlayerEnemy = false;
 
-
                 if (isMulti)
                 {
-                    for (int j = 0; j < ourPlayer.str.Length; j++)                                //
+                    for (int j = 0; j < firstPlayer.str.Length; j++)                                //
                     {                                                                             //
-                        if ((newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y) ||
+                        if ((newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y) ||
                             (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
                         {                                                                         //
                             //livesCount--;                                                       //
                             Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
                             enemies.Clear();                                                      //
-                            shots.Clear();                                                        //
+                            shots.Clear();
+                            rocks.Clear();
                             collisionPlayerEnemy = true;                                          //
                             break;                                                                //
                             // console.writeline environment.exit(0)                              //
@@ -306,14 +321,15 @@ namespace Dread_Knight
                 }
                 else
                 {
-                    for (int j = 0; j < ourPlayer.str.Length; j++)                                //
+                    for (int j = 0; j < firstPlayer.str.Length; j++)                                //
                     {                                                                             //
-                        if (newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y)
+                        if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
                         {                                                                         //
                             //livesCount--;                                                       //
                             Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
                             enemies.Clear();                                                      //
-                            shots.Clear();                                                        //
+                            shots.Clear();
+                            rocks.Clear();
                             collisionPlayerEnemy = true;                                          //
                             break;                                                                //
                             // console.writeline environment.exit(0)                              //
@@ -353,9 +369,41 @@ namespace Dread_Knight
             enemies = newListOfEnemies;
         }
 
+        static void MoveRocks()
+        {
+            List<Object> newListOfRocks = new List<Object>();
+            for (int i = 0; i < rocks.Count; i++)
+            {
+                Object oldRock = rocks[i];
+                Object newRock = new Object();
+                newRock.x = oldRock.x - 1;
+                newRock.y = oldRock.y;
+                newRock.str = oldRock.str;
+                newRock.color = oldRock.color;
+
+                if (newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y)
+                {
+                    score -= 50;
+                    if (score < 0)
+                    {
+                        score = 0;
+                    }
+                }
+                else
+                {
+                    if (newRock.x > 0)
+                    {
+                        newListOfRocks.Add(newRock);
+                    }
+                }
+            }
+
+            rocks = newListOfRocks;
+        }
+
         static void RedrawPlayfield()
         {
-            PrintOnPosition(ourPlayer.x, ourPlayer.y, ourPlayer.str, ourPlayer.color);
+            PrintOnPosition(firstPlayer.x, firstPlayer.y, firstPlayer.str, firstPlayer.color);
             PrintOnPosition(secondPlayer.x, secondPlayer.y, secondPlayer.str, secondPlayer.color);
 
             foreach (Object enemy in enemies)
@@ -365,6 +413,10 @@ namespace Dread_Knight
             foreach (Object shot in shots)
             {
                 PrintOnPosition(shot.x, shot.y, shot.str, shot.color);
+            }
+            foreach (Object rock in rocks)
+            {
+                PrintOnPosition(rock.x, rock.y, rock.str, rock.color);
             }
         }
 
