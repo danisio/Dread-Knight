@@ -44,6 +44,8 @@ namespace Dread_Knight
         static int enemiesPause = 13;
 
         //static int livesCount = 5;
+        static int playerOneLives = 5;
+        static int playerTwoLives = 5;
 
         internal static void MultyPlay(bool isMulti = false)
         {
@@ -53,7 +55,7 @@ namespace Dread_Knight
             ourPlayer.x = 0;
             ourPlayer.y = Console.WindowHeight / 2;
             ourPlayer.str = " ('0.0)-=╦╤── ";
-            ourPlayer.color = ConsoleColor.White;
+            ourPlayer.color = ConsoleColor.Yellow;
 
             //make second Player
             if (isMulti)
@@ -61,7 +63,7 @@ namespace Dread_Knight
                 secondPlayer.x = 0;
                 secondPlayer.y = Console.WindowHeight / 2 + 1;
                 secondPlayer.str = " ('■_■)-=╦╤── ";
-                secondPlayer.color = ConsoleColor.White;
+                secondPlayer.color = ConsoleColor.Yellow;
             }
 
             while (true)
@@ -173,11 +175,11 @@ namespace Dread_Knight
             newEnemy.str = enemyLooks[randomGenerator.Next(0, enemyLooks.Length)];
             ConsoleColor[] enemyColors = 
             {
-                ConsoleColor.Yellow, 
+                ConsoleColor.Green, 
                 ConsoleColor.DarkGreen, 
                 ConsoleColor.Red,
-                ConsoleColor.DarkMagenta,
-                ConsoleColor.Blue
+                ConsoleColor.Magenta,
+                ConsoleColor.White
             };
             newEnemy.color = enemyColors[randomGenerator.Next(0, enemyColors.Length)];
             enemies.Add(newEnemy);
@@ -186,7 +188,7 @@ namespace Dread_Knight
         static void ShootFirstPlayer()
         {
             Object newShotFP = new Object();
-            newShotFP.x = ourPlayer.x + 14;   //14 = size of our player
+            newShotFP.x = ourPlayer.x + ourPlayer.str.Length - 2;
             newShotFP.y = ourPlayer.y;
             newShotFP.str = "Ѿ";
             newShotFP.color = ConsoleColor.Black;
@@ -196,7 +198,7 @@ namespace Dread_Knight
         static void ShootSecondPlayer()
         {
             Object newShotSP = new Object();
-            newShotSP.x = secondPlayer.x + 14;   //14 = size of our player
+            newShotSP.x = secondPlayer.x + secondPlayer.str.Length - 2;
             newShotSP.y = secondPlayer.y;
             newShotSP.str = "Ѿ";
             newShotSP.color = ConsoleColor.Black;
@@ -391,17 +393,21 @@ namespace Dread_Knight
         static void PrintInfoOnPosition(bool isMulti)
         {
             string line = new string('-', Console.WindowWidth);
-            PrintOnPosition(0, 0, "Player 1", ConsoleColor.Black);
-            PrintOnPosition(0, 2, "Lives ", ConsoleColor.Black);
+            string livesOne = new string('♥', playerOneLives);
+            string livesTwo = new string('♥', playerTwoLives);
+            PrintOnPosition(1, 0, "Player 1", ConsoleColor.White);
+            PrintOnPosition(1, 2, "Lives " , ConsoleColor.White);
+            PrintOnPosition(7, 2, livesOne, ConsoleColor.Red);
             if (isMulti)
             {
-                PrintOnPosition(Console.WindowWidth - 8, 0, "Player 2", ConsoleColor.Black);
-                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.Black);
+                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, "Lives " , ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 6, 2, livesTwo, ConsoleColor.Blue);
             }
-            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.Black);
-            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.Black);
-            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.Black);
-            PrintOnPosition(0, 3, "" + line, ConsoleColor.Black);
+            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.White);
+            PrintOnPosition(0, 3, "" + line, ConsoleColor.White);
         }
     }
 }
