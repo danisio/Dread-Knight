@@ -41,11 +41,11 @@ namespace Dread_Knight
         static int acceleration = 30;
 
         static int step = 0;
-        static int enemiesPause = 5;
+        static int enemiesPause = 13;
 
         //static int livesCount = 5;
 
-        internal static void MultyPlay()
+        internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
@@ -56,11 +56,13 @@ namespace Dread_Knight
             ourPlayer.color = ConsoleColor.White;
 
             //make second Player
-            secondPlayer.x = 0;
-            secondPlayer.y = Console.WindowHeight / 2 + 1;
-            secondPlayer.str = " ('■_■)-=╦╤── ";
-            secondPlayer.color = ConsoleColor.White;
-
+            if (isMulti)
+            {
+                secondPlayer.x = 0;
+                secondPlayer.y = Console.WindowHeight / 2 + 1;
+                secondPlayer.str = " ('■_■)-=╦╤── ";
+                secondPlayer.color = ConsoleColor.White;
+            }
 
             while (true)
             {
@@ -86,11 +88,17 @@ namespace Dread_Knight
 
                 MoveShots();
 
-                MoveEnemies();
+                if (isMulti)
+                {
+                    MoveEnemies(true);
+                }
+                else
+                {
+                    MoveEnemies(false);
+                }
 
-                //clear the console - old positions
                 Console.Clear();
-
+                
                 //draw new positions
                 RedrawPlayfield();
 
@@ -260,14 +268,7 @@ namespace Dread_Knight
                 newShot.str = oldShot.str;
                 newShot.color = oldShot.color;
 
-                Object oldSPShot = shots[i];
-                Object newSPShot = new Object();
-                newSPShot.x = oldSPShot.x + 1;
-                newSPShot.y = oldSPShot.y;
-                newSPShot.str = oldSPShot.str;
-                newSPShot.color = oldSPShot.color;
-
-                if (newShot.x < Console.WindowWidth & newSPShot.x < Console.WindowWidth)
+                if (newShot.x < Console.WindowWidth)
                 {
                     newListOfShots.Add(newShot);
                 }
@@ -276,7 +277,7 @@ namespace Dread_Knight
             shots = newListOfShots;
         }
 
-        static void MoveEnemies()
+        static void MoveEnemies(bool isMulti)
         {
             List<Object> newListOfEnemies = new List<Object>();
             for (int i = 0; i < enemies.Count; i++)
@@ -290,26 +291,45 @@ namespace Dread_Knight
 
                 bool collisionPlayerEnemy = false;
 
-                for (int j = 0; j < ourPlayer.str.Length; j++)                                //
-                {                                                                             //
-                    if ((newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y) || 
-                        (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
-                    {                                                                         //
-                        //livesCount--;                                                       //
-                        Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
-                        enemies.Clear();                                                      //
-                        shots.Clear();                                                        //
-                        collisionPlayerEnemy = true;                                          //
-                        break;                                                                //
-                        // console.writeline environment.exit(0)                              //
-                    }                                                                         //
+
+                if (isMulti)
+                {
+                    for (int j = 0; j < ourPlayer.str.Length; j++)                                //
+                    {                                                                             //
+                        if ((newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y) ||
+                            (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
+                        {                                                                         //
+                            //livesCount--;                                                       //
+                            Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
+                            enemies.Clear();                                                      //
+                            shots.Clear();                                                        //
+                            collisionPlayerEnemy = true;                                          //
+                            break;                                                                //
+                            // console.writeline environment.exit(0)                              //
+                        }                                                                         //
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < ourPlayer.str.Length; j++)                                //
+                    {                                                                             //
+                        if (newEnemy.x == ourPlayer.x + j && newEnemy.y == ourPlayer.y)
+                        {                                                                         //
+                            //livesCount--;                                                       //
+                            Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
+                            enemies.Clear();                                                      //
+                            shots.Clear();                                                        //
+                            collisionPlayerEnemy = true;                                          //
+                            break;                                                                //
+                            // console.writeline environment.exit(0)                              //
+                        }                                                                         //
+                    }
                 }
 
                 if (collisionPlayerEnemy)
                 {
                     break;
                 }
-
 
                 if (newEnemy.x > 0)
                 {
@@ -318,21 +338,21 @@ namespace Dread_Knight
                 else if (newEnemy.x == 0)                               //
                 {                                                       //
                     newEnemy.x++;                                       //
-                                                                        //  
+                    //  
                     string tempNewEnemy = string.Empty;                 //  
                     for (int k = 1; k < newEnemy.str.Length; k++)       //  
                     {                                                   //
                         tempNewEnemy += newEnemy.str[k];                //
                     }                                                   //  Checks if the enemy reached the end of the field.
-                                                                        //  If yes, its string is gradually trimmed from its beginning.
+                    //  If yes, its string is gradually trimmed from its beginning.
                     if (newEnemy.str.Length == 0)                       //
                     {                                                   //
                         continue;                                       //
                     }                                                   //
-                                                                        //
+                    //
                     newEnemy.str = tempNewEnemy;                        //
                     newListOfEnemies.Add(newEnemy);                     //
-                }                              
+                }
             }
 
             enemies = newListOfEnemies;

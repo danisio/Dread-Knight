@@ -29,12 +29,12 @@ namespace Dread_Knight
 
             if (numberOfPlayers == 1)
                 //Console.WriteLine(" ('0.0)-=╦╤── ");
-                SinglePlayer.SinglePlay();
+                MultyPlayer.MultyPlay();
             else
             {
                 Console.WriteLine(" ('0.0)-=╦╤── ");
                 Console.WriteLine(" ('■_■)-=╦╤── ");
-                MultyPlayer.MultyPlay();
+                MultyPlayer.MultyPlay(true);
             }
         }
     }
