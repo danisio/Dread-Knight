@@ -24,6 +24,7 @@ namespace Dread_Knight
         static List<Object> enemies = new List<Object>();
         static List<Object> shots = new List<Object>();
         static List<Object> rocks = new List<Object>();
+        static List<Object> bonusLives = new List<Object>();
 
         static int[,] levelsData = //array with data about levels -> level 1-100 points, level 2-200 points etc.
                     {{1, 100},
@@ -46,26 +47,16 @@ namespace Dread_Knight
         static int stepRocks = 0;
         static int rocksPause = 30;
 
-        //static int livesCount = 5;
+        static int firstPlayerLives = 5;
+        static int secondPlayerLives = 5;
+
+        static int chance = randomGenerator.Next(0, 100);
 
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
 
-            //make first player
-            firstPlayer.x = 0;
-            firstPlayer.y = Console.WindowHeight / 2;
-            firstPlayer.str = " ('0.0)-=╦╤── ";
-            firstPlayer.color = ConsoleColor.White;
-
-            //make second Player
-            if (isMulti)
-            {
-                secondPlayer.x = 0;
-                secondPlayer.y = Console.WindowHeight / 2 + 1;
-                secondPlayer.str = " ('■_■)-=╦╤── ";
-                secondPlayer.color = ConsoleColor.White;
-            }
+            DrawPlayers(isMulti);
 
             while (true)
             {
@@ -90,6 +81,12 @@ namespace Dread_Knight
 
                 stepRocks++;
 
+                //add bonus "live"
+                if (chance < 90)
+                {
+                    AddNewBonusObject();
+                }
+
                 //move our player and shoot(key pressed)
                 while (Console.KeyAvailable)
                 {
@@ -104,6 +101,8 @@ namespace Dread_Knight
 
                 MoveRocks();
 
+                MoveBonusObject(isMulti);
+
                 Console.Clear();
 
                 //draw new positions
@@ -114,6 +113,22 @@ namespace Dread_Knight
 
                 //slow down program
                 Thread.Sleep(150 - speed);
+            }
+        }
+
+        static void DrawPlayers(bool isMulti)
+        {
+            firstPlayer.x = 0;
+            firstPlayer.y = Console.WindowHeight / 2;
+            firstPlayer.str = " ('0.0)-=╦╤── ";
+            firstPlayer.color = ConsoleColor.White;
+
+            if (isMulti)
+            {
+                secondPlayer.x = 0;
+                secondPlayer.y = Console.WindowHeight / 2 + 1;
+                secondPlayer.str = " ('■_■)-=╦╤── ";
+                secondPlayer.color = ConsoleColor.White;
             }
         }
 
@@ -206,6 +221,16 @@ namespace Dread_Knight
             newRock.str = "▓"; //█
             newRock.color = ConsoleColor.Black;
             rocks.Add(newRock);
+        }
+
+        static void AddNewBonusObject()
+        {
+            Object newBonusLive = new Object();
+            newBonusLive.x = Console.WindowWidth - 1;
+            newBonusLive.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
+            newBonusLive.str = "❤";
+            newBonusLive.color = ConsoleColor.Red;
+            bonusLives.Add(newBonusLive);
         }
 
         static void Shoot(Object player)
@@ -399,6 +424,43 @@ namespace Dread_Knight
             rocks = newListOfRocks;
         }
 
+        static void MoveBonusObject(bool isMulti)
+        {
+            List<Object> newListOfBonus = new List<Object>();
+            for (int i = 0; i < bonusLives.Count; i++)
+            {
+                Object oldBonus = bonusLives[i];
+                Object newBonus = new Object();
+                newBonus.x = oldBonus.x - 1;
+                newBonus.y = oldBonus.y;
+                newBonus.str = oldBonus.str;
+                newBonus.color = oldBonus.color;
+
+                if (isMulti)
+                {
+                    if (newBonus.x <= secondPlayer.x + secondPlayer.str.Length && newBonus.y == secondPlayer.y)
+                    {
+                        secondPlayerLives++;
+                        continue;
+                    }
+                }
+
+                if (newBonus.x <= firstPlayer.x + firstPlayer.str.Length && newBonus.y == firstPlayer.y)
+                {
+                    firstPlayerLives++;
+                    //continue;
+                }
+
+                if (newBonus.x > 0)
+                {
+                    newListOfBonus.Add(newBonus);
+                }
+
+            }
+
+            bonusLives = newListOfBonus;
+        }
+
         static void RedrawPlayfield()
         {
             PrintOnPosition(firstPlayer.x, firstPlayer.y, firstPlayer.str, firstPlayer.color);
@@ -415,6 +477,11 @@ namespace Dread_Knight
             foreach (Object rock in rocks)
             {
                 PrintOnPosition(rock.x, rock.y, rock.str, rock.color);
+            }
+
+            foreach (Object bonus in bonusLives)
+            {
+                PrintOnPosition(bonus.x, bonus.y, bonus.str, bonus.color);
             }
         }
 
@@ -444,11 +511,11 @@ namespace Dread_Knight
         {
             string line = new string('-', Console.WindowWidth);
             PrintOnPosition(0, 0, "Player 1", ConsoleColor.Black);
-            PrintOnPosition(0, 2, "Lives ", ConsoleColor.Black);
+            PrintOnPosition(0, 2, "Lives " + firstPlayerLives, ConsoleColor.Black);
             if (isMulti)
             {
                 PrintOnPosition(Console.WindowWidth - 8, 0, "Player 2", ConsoleColor.Black);
-                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.Black);
+                PrintOnPosition(Console.WindowWidth - 8, 2, " Lives " + secondPlayerLives, ConsoleColor.Black);
             }
             PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.Black);
             PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.Black);
