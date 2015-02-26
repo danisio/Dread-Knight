@@ -76,7 +76,7 @@ namespace Dread_Knight
                     step = 0;
                 }
 
-                
+                step++;
 
                 //move our player and shoot(key pressed)
                 while (Console.KeyAvailable)
