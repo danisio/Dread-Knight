@@ -49,6 +49,7 @@ namespace Dread_Knight
         //static int livesCount = 5;
         static int playerOneLives = 5;
         static int playerTwoLives = 5;
+        static bool playerOneDied = false;
 
         internal static void MultyPlay(bool isMulti = false)
         {
@@ -61,6 +62,7 @@ namespace Dread_Knight
             firstPlayer.color = ConsoleColor.Yellow;
 
             //make second Player
+
             if (isMulti)
             {
                 secondPlayer.x = 0;
@@ -97,25 +99,34 @@ namespace Dread_Knight
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
                     MoveFirstPlayer(pressedKey);
-                    MoveSecondPlayer(pressedKey);
+                    if (isMulti)
+                    {
+                        MoveSecondPlayer(pressedKey);
+                    }
                 }
 
                 MoveShots();
 
                 MoveEnemies(isMulti);
+                if (playerOneDied)
+                {
+                    playerOneDied = false;
+                    isMulti = false;
+                    firstPlayer.str = secondPlayer.str;
+                }
 
                 MoveRocks();
 
                 Console.Clear();
 
                 //draw new positions
-                RedrawPlayfield();
+                RedrawPlayfield(isMulti);
 
                 //draw info
                 PrintInfoOnPosition(isMulti);
 
                 //slow down program
-                Thread.Sleep(150 - speed);
+                Thread.Sleep(30 - speed);
             }
         }
 
@@ -312,10 +323,31 @@ namespace Dread_Knight
                                 playerOneLives--;
                             if (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y)
                                 playerTwoLives--;
-                            if (playerOneLives == 0 || playerTwoLives == 0)
+
+                            if (playerOneLives == 0 && playerTwoLives == 0)
                                 End.GameOver(score);
+
+                            if (playerOneLives == 0)
+                            {
+                                Console.Beep(100, 900);
+                                playerOneDied = true;
+                                playerOneLives = playerTwoLives;
+                                playerTwoLives = 0;
+                                firstPlayer.y = secondPlayer.y;
+                                enemies.Clear();                                                      //
+                                shots.Clear();
+                                rocks.Clear();
+                                Console.Clear();
+                            }
+
+                            if (playerTwoLives == 0 && isMulti)
+                            {
+                                return;
+                                //MultyPlay(false);
+                            }
+
                             //livesCount--;                                                       //
-                            Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
+                            Console.Beep(300, 300);                                               // Checks every part of both players for collision with the enemy
                             enemies.Clear();                                                      //
                             shots.Clear();
                             rocks.Clear();
@@ -335,7 +367,7 @@ namespace Dread_Knight
                             if (playerOneLives == 0)
                                 End.GameOver(score);
                             //livesCount--;                                                       //
-                            Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
+                            Console.Beep(300, 300);                                               // Checks every part of our player for collision with the enemy
                             enemies.Clear();                                                      //
                             shots.Clear();
                             rocks.Clear();
@@ -410,10 +442,13 @@ namespace Dread_Knight
             rocks = newListOfRocks;
         }
 
-        static void RedrawPlayfield()
+        static void RedrawPlayfield(bool isMulti = false)
         {
             PrintOnPosition(firstPlayer.x, firstPlayer.y, firstPlayer.str, firstPlayer.color);
-            PrintOnPosition(secondPlayer.x, secondPlayer.y, secondPlayer.str, secondPlayer.color);
+            if (isMulti)
+            {
+                PrintOnPosition(secondPlayer.x, secondPlayer.y, secondPlayer.str, secondPlayer.color);
+            }
 
             foreach (Object enemy in enemies)
             {
@@ -456,13 +491,23 @@ namespace Dread_Knight
             string line = new string('-', Console.WindowWidth);
             string livesOne = new string('♥', playerOneLives);
             string livesTwo = new string('♥', playerTwoLives);
-            PrintOnPosition(1, 0, "Player 1", ConsoleColor.White);
-            PrintOnPosition(1, 2, "Lives " , ConsoleColor.White);
-            PrintOnPosition(7, 2, livesOne, ConsoleColor.Red);
+            if (playerOneDied)
+            {
+                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, "Lives ", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 6, 2, livesOne, ConsoleColor.Blue);
+            }
+            else
+            {
+                PrintOnPosition(1, 0, "Player 1", ConsoleColor.White);
+                PrintOnPosition(1, 2, "Lives ", ConsoleColor.White);
+                PrintOnPosition(7, 2, livesOne, ConsoleColor.Red);
+            }
+
             if (isMulti)
             {
                 PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
-                PrintOnPosition(Console.WindowWidth - 12, 2, "Lives " , ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, "Lives ", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 6, 2, livesTwo, ConsoleColor.Blue);
             }
             PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.White);
