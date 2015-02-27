@@ -22,38 +22,39 @@ namespace Dread_Knight
 
         internal static void Castle()
         {
-            Console.WriteLine("                                                                                                         ");
-            Console.WriteLine("                                                                                                         ");
-            Console.WriteLine("                                                                                                         ");
-            Console.WriteLine("                                                                                                         ");
-            Console.WriteLine("                                                                                 ^                       ");
-            Console.WriteLine("                                                                                / \\                      ");
-            Console.WriteLine("            !_                             !_                                  /   \\                     ");
-            Console.WriteLine("            |* `--,                        |* `--,                            /     \\                    ");
-            Console.WriteLine("            |.-`                           |.-`                              /       \\                   ");
-            Console.WriteLine("            |                              |                               _/  _   _  \\_                 ");
-            Console.WriteLine("            ^                              ^                              [ ]_[ ]_[ ]_[ ]                ");
-            Console.WriteLine("           / \\                            / \\                             |_           _|                ");
-            Console.WriteLine("          /   \\                          /   \\                             |           |                 ");
-            Console.WriteLine("         /     \\                        /     \\                            |      []   |                 ");
-            Console.WriteLine("        /       \\                      /       \\[ ]_[ ]_[ ]_[ ]_[ ]        |           |                 ");
-            Console.WriteLine("      _/  _   _  \\_                  _/  _   _  \\|_ _   _ _   _ _|         |           |                 ");
-            Console.WriteLine("     [ ]_[ ]_[ ]_[ ]                [ ]_[ ]_[ ]_[ ]             |          |      []   |\\                ");
-            Console.WriteLine("     |_           _|                |_           _|        []   |          |           | \\               ");
-            Console.WriteLine("      |           |                  |           |              |          |           |  \\              ");
-            Console.WriteLine("      |           |_[ ]_[ ]__[ ]_[ ]_|           |_[ ]_[ ]_[ ]_[ ]_[ ]_[ ]_|      []   |___\\             ");
-            Console.WriteLine("      |           |                  |           |                         |           |/+\\|             ");
-            Console.WriteLine("      |           |                  |           |                         |           ||+||             ");
-            Console.WriteLine("      |     _     |                  |     _     |      []         []      |           ||+||             ");
-            Console.WriteLine("      |    /+\\    |                  |    /+\\    |                         |           |^^^|             ");
-            Console.WriteLine("      |   |+|+|   |                  |   |+|+|   |                         |           |   |             ");
-            Console.WriteLine("      |   |+|+|   |      _,--,_      |   |+|+|   |                         |           |   |             ");
-            Console.WriteLine("      |   |+|+|   |     / |  | \\     |   |+|+|   |                         |           |  /              ");
-            Console.WriteLine("      |   ^^^^^   |     | |  | |     |   ^^^^^   |                         |           | /               ");
-            Console.WriteLine("      |           |     | |  <&>     |           |                         |           |/                ");
-            Console.WriteLine("      |           |     | |  | |     |           |                         |           |                 ");
-            Console.WriteLine("      |           |     | |  | |     |           |                         |           |                 ");
-            Console.WriteLine("`^^^^^^^^^^^`^^^^`^^^`^^^^^^^^^^^^`^`^`^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^`^^^`^^^^^^^`^^^^`^^^`^^^^^^^^`^^^^`^^^`^^^^");
+            Console.WriteLine(@"
+                                                                                                        
+                                                                                                        
+                                                                                                        
+                                                                                 ^                      
+                                                                                / \                    
+            !_                             !_                                  /   \                   
+            |* `--,                        |* `--,                            /     \                  
+            |.-`                           |.-`                              /       \                 
+            |                              |                               _/  _   _  \_               
+            ^                              ^                              [ ]_[ ]_[ ]_[ ]               
+           / \                            / \                             |_           _|             
+          /   \                          /   \                             |           |              
+         /     \                        /     \                            |      []   |              
+        /       \                      /       \[ ]_[ ]_[ ]_[ ]_[ ]        |           |              
+      _/  _   _  \_                  _/  _   _  \|_ _   _ _   _ _|         |           |              
+     [ ]_[ ]_[ ]_[ ]                [ ]_[ ]_[ ]_[ ]             |          |      []   |\              
+     |_           _|                |_           _|        []   |          |           | \             
+      |           |                  |           |              |          |           |  \            
+      |           |_[ ]_[ ]__[ ]_[ ]_|           |_[ ]_[ ]_[ ]_[ ]_[ ]_[ ]_|      []   |___\           
+      |           |                  |           |                         |           |/+\|           
+      |           |                  |           |                         |           ||+||            
+      |     _     |                  |     _     |      []         []      |           ||+||            
+      |    /+\    |                  |    /+\    |                         |           |^^^|          
+      |   |+|+|   |                  |   |+|+|   |                         |           |   |            
+      |   |+|+|   |      _,--,_      |   |+|+|   |                         |           |   |            
+      |   |+|+|   |     / |  | \     |   |+|+|   |                         |           |  /            
+      |   ^^^^^   |     | |  | |     |   ^^^^^   |                         |           | /              
+      |           |     | |  <&>     |           |                         |           |/               
+      |           |     | |  | |     |           |                         |           |                
+      |           |     | |  | |     |           |                         |           |                
+`^^^^^^^^^^^`^^^^`^^^`^^^^^^^^^^^^`^`^`^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^`^^^`^^^^^^^`^^^^`^^^`^^^^^^^^`^^^^`^^^`^^^^
+");
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(26, 21);
@@ -78,8 +79,8 @@ namespace Dread_Knight
                 Console.Clear();
                 Castle();
                 PrintOnPosition(dreadNight.x, dreadNight.y, dreadNight.s, dreadNight.color);
-                dreadNight.x = dreadNight.x - 1;
-                Thread.Sleep(60);
+                dreadNight.x = dreadNight.x - 8;
+                Thread.Sleep(500);
             }
         }
     }

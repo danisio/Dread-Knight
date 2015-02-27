@@ -63,7 +63,7 @@ namespace Dread_Knight
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
 
-                int chance = randomGenerator.Next(0, 100);
+                int chance = randomGenerator.Next(0, 120);
 
                 //add new enemy every "enemiesPause" step
                 if (stepEnemy % enemiesPause == 0)
@@ -84,7 +84,7 @@ namespace Dread_Knight
                 stepRocks++;
 
                 //add bonus "live"
-                if (chance < 2)
+                if (chance <= 1)
                 {
                     AddNewBonusObject();
                 }
@@ -131,7 +131,7 @@ namespace Dread_Knight
                 PrintInfoOnPosition(isMulti);
 
                 //slow down program
-                Thread.Sleep(30 - speed);
+                Thread.Sleep(150 - speed);
             }
         }
 
@@ -384,7 +384,7 @@ namespace Dread_Knight
             }
         }
 
-        private static void ClearAllObjects(bool isMulti = false)
+        static void ClearAllObjects(bool isMulti = false)
         {
             if (playerOneLives == 0)
             {
@@ -448,7 +448,6 @@ namespace Dread_Knight
                 newBonus.y = oldBonus.y;
                 newBonus.str = oldBonus.str;
                 newBonus.color = oldBonus.color;
-
 
                 if (newBonus.x <= firstPlayer.x + firstPlayer.str.Length && newBonus.y == firstPlayer.y)
                 {
@@ -520,13 +519,13 @@ namespace Dread_Knight
 
         static void PrintInfoOnPosition(bool isMulti)
         {
-            string line = new string('-', Console.WindowWidth);
+            string line = new string('▄', Console.WindowWidth);
             string livesOne = new string('♥', playerOneLives);
             string livesTwo = new string('♥', playerTwoLives);
             if (playerOneDied)
             {
                 PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
-                PrintOnPosition(Console.WindowWidth - 12, 2, "Lives ", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 6, 2, livesOne, ConsoleColor.Blue);
             }
             else

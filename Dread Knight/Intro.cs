@@ -39,7 +39,7 @@ namespace Dread_Knight
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("   PRESS Y or N");
                 Console.SetCursorPosition(Console.WindowWidth / 2, 11);
-                pressedKey = Console.ReadKey();
+                pressedKey = Console.ReadKey(true);
                 isFirstTime = false;
             } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
 
