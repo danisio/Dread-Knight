@@ -5,6 +5,14 @@ namespace Dread_Knight
 {
     class Animation
     {
+        struct Object
+        {
+            public int x;
+            public int y;
+            public string s;
+            public ConsoleColor color;
+        }
+
         static void PrintOnPosition(int x, int y, string s, ConsoleColor color = ConsoleColor.Black)
         {
             Console.SetCursorPosition(x, y);
@@ -47,14 +55,14 @@ namespace Dread_Knight
             Console.WriteLine("      |           |     | |  | |     |           |                         |           |                 ");
             Console.WriteLine("`^^^^^^^^^^^`^^^^`^^^`^^^^^^^^^^^^`^`^`^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^`^^^`^^^^^^^`^^^^`^^^`^^^^^^^^`^^^^`^^^`^^^^");
 
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.SetCursorPosition(26, 21);
             Console.Write("/\\/\\");
             Console.SetCursorPosition(27, 22);
             Console.Write("/\\");
             Console.SetCursorPosition(27, 23);
             Console.Write("\\/");
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
         internal static void FirstStage()
@@ -63,7 +71,7 @@ namespace Dread_Knight
             dreadNight.x = 100;
             dreadNight.y = 30;
             dreadNight.s = "(0.0')";
-            dreadNight.color = ConsoleColor.Black;
+            dreadNight.color = ConsoleColor.Yellow;
 
             while (dreadNight.x > 24)
             {
@@ -71,7 +79,7 @@ namespace Dread_Knight
                 Castle();
                 PrintOnPosition(dreadNight.x, dreadNight.y, dreadNight.s, dreadNight.color);
                 dreadNight.x = dreadNight.x - 1;
-                Thread.Sleep(10);
+                Thread.Sleep(60);
             }
         }
     }

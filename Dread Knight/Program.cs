@@ -3,14 +3,6 @@ using Dread_Knight;
 
 namespace Dread_Knight
 {
-    struct Object
-    {
-        public int x;
-        public int y;
-        public string s;
-        public ConsoleColor color;
-    }
-
     class Program
     {
         static void Main()
@@ -18,17 +10,19 @@ namespace Dread_Knight
             Console.BufferHeight = Console.WindowHeight = 35;
             Console.BufferWidth = Console.WindowWidth = 125;
 
-            Console.BackgroundColor = ConsoleColor.Gray;
+            Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
             Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
 
-            Animation.FirstStage();
+            //Animation.FirstStage();
 
             int numberOfPlayers = Intro.Menu();
 
             if (numberOfPlayers == 1)
+            {
                 MultyPlayer.MultyPlay();
+            }
             else
             {
                 MultyPlayer.MultyPlay(true);

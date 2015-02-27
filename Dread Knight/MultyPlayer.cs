@@ -47,10 +47,9 @@ namespace Dread_Knight
         static int stepRocks = 0;
         static int rocksPause = 30;
 
-        static int firstPlayerLives = 5;
-        static int secondPlayerLives = 5;
 
-        static int chance = randomGenerator.Next(0, 100);
+        static int playerOneLives = 5;
+        static int playerTwoLives = 5;
 
         internal static void MultyPlay(bool isMulti = false)
         {
@@ -62,6 +61,8 @@ namespace Dread_Knight
             {
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
+
+                int chance = randomGenerator.Next(0, 100);
 
                 //add new enemy every "enemiesPause" step
                 if (stepEnemy % enemiesPause == 0)
@@ -82,7 +83,7 @@ namespace Dread_Knight
                 stepRocks++;
 
                 //add bonus "live"
-                if (chance < 90)
+                if (chance < 2)
                 {
                     AddNewBonusObject();
                 }
@@ -156,11 +157,6 @@ namespace Dread_Knight
                                 maxPointsForCurrentLevel = levelsData[currentLevel - 1, 1];
                                 speed += acceleration;              //every next level will be faster
                                 enemiesPause--;                     //every next level will be added more enemies 
-
-                                if (currentLevel == maxLevel)
-                                {
-                                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                                }
                             }
                         }
                     }
@@ -202,11 +198,11 @@ namespace Dread_Knight
             newEnemy.str = enemyLooks[randomGenerator.Next(0, enemyLooks.Length)];
             ConsoleColor[] enemyColors = 
             {
-                ConsoleColor.Yellow, 
+                ConsoleColor.Green, 
                 ConsoleColor.DarkGreen, 
                 ConsoleColor.Red,
-                ConsoleColor.DarkMagenta,
-                ConsoleColor.Blue
+                ConsoleColor.Magenta,
+                ConsoleColor.White
             };
 
             newEnemy.color = enemyColors[randomGenerator.Next(0, enemyColors.Length)];
@@ -219,7 +215,7 @@ namespace Dread_Knight
             newRock.x = Console.WindowWidth - 1;
             newRock.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
             newRock.str = "▓"; //█
-            newRock.color = ConsoleColor.Black;
+            newRock.color = ConsoleColor.Red;
             rocks.Add(newRock);
         }
 
@@ -228,7 +224,7 @@ namespace Dread_Knight
             Object newBonusLive = new Object();
             newBonusLive.x = Console.WindowWidth - 1;
             newBonusLive.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
-            newBonusLive.str = "❤";
+            newBonusLive.str = "♥";
             newBonusLive.color = ConsoleColor.Red;
             bonusLives.Add(newBonusLive);
         }
@@ -239,7 +235,7 @@ namespace Dread_Knight
             newShot.x = player.x + player.str.Length;
             newShot.y = player.y;
             newShot.str = "●";
-            newShot.color = ConsoleColor.Black;
+            newShot.color = ConsoleColor.Yellow;
             shots.Add(newShot);
         }
 
@@ -330,33 +326,43 @@ namespace Dread_Knight
                     {                                                                             //
                         if ((newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y) ||
                             (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
-                        {                                                                         //
-                            //livesCount--;                                                       //
+                        {
+                            if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
+                                playerOneLives--;
+                            if (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y)
+                                playerTwoLives--;
+                            if (playerOneLives == 0 || playerTwoLives == 0)
+                                End.GameOver(score);
+
                             Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
-                            enemies.Clear();                                                      //
+                            enemies.Clear();
                             shots.Clear();
                             rocks.Clear();
-                            collisionPlayerEnemy = true;                                          //
-                            break;                                                                //
-                            // console.writeline environment.exit(0)                              //
-                        }                                                                         //
+                            bonusLives.Clear();
+                            collisionPlayerEnemy = true;
+                            break;
+                            // console.writeline environment.exit(0)                            
+                        }
                     }
                 }
                 else
                 {
-                    for (int j = 0; j < firstPlayer.str.Length; j++)                                //
-                    {                                                                             //
+                    for (int j = 0; j < firstPlayer.str.Length; j++)
+                    {
                         if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
-                        {                                                                         //
-                            //livesCount--;                                                       //
-                            Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
-                            enemies.Clear();                                                      //
+                        {
+                            playerOneLives--;
+                            if (playerOneLives == 0)
+                                End.GameOver(score);
+
+                            Console.Beep(1000, 50);                                               // Checks every part of our player for 
+                            enemies.Clear();                                                     //collision with the enemy 
                             shots.Clear();
                             rocks.Clear();
-                            collisionPlayerEnemy = true;                                          //
-                            break;                                                                //
-                            // console.writeline environment.exit(0)                              //
-                        }                                                                         //
+                            bonusLives.Clear();
+                            collisionPlayerEnemy = true;
+                            break;
+                        }
                     }
                 }
 
@@ -382,7 +388,7 @@ namespace Dread_Knight
                     if (newEnemy.str.Length == 0)                       //
                     {                                                   //
                         continue;                                       //
-                    }                                                   //
+                    }
                     //
                     newEnemy.str = tempNewEnemy;                        //
                     newListOfEnemies.Add(newEnemy);                     //
@@ -406,7 +412,7 @@ namespace Dread_Knight
 
                 if (newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y)
                 {
-                    score -= 50;
+                    score -= 20;
                     if (score < 0)
                     {
                         score = 0;
@@ -436,26 +442,22 @@ namespace Dread_Knight
                 newBonus.str = oldBonus.str;
                 newBonus.color = oldBonus.color;
 
-                if (isMulti)
-                {
-                    if (newBonus.x <= secondPlayer.x + secondPlayer.str.Length && newBonus.y == secondPlayer.y)
-                    {
-                        secondPlayerLives++;
-                        continue;
-                    }
-                }
 
                 if (newBonus.x <= firstPlayer.x + firstPlayer.str.Length && newBonus.y == firstPlayer.y)
                 {
-                    firstPlayerLives++;
-                    //continue;
+                    playerOneLives++;
                 }
-
-                if (newBonus.x > 0)
+                else if (isMulti && (newBonus.x <= secondPlayer.x + secondPlayer.str.Length && newBonus.y == secondPlayer.y))
                 {
-                    newListOfBonus.Add(newBonus);
+                    playerTwoLives++;
                 }
-
+                else
+                {
+                    if (newBonus.x > 0)
+                    {
+                        newListOfBonus.Add(newBonus);
+                    }
+                }
             }
 
             bonusLives = newListOfBonus;
@@ -478,7 +480,6 @@ namespace Dread_Knight
             {
                 PrintOnPosition(rock.x, rock.y, rock.str, rock.color);
             }
-
             foreach (Object bonus in bonusLives)
             {
                 PrintOnPosition(bonus.x, bonus.y, bonus.str, bonus.color);
@@ -510,17 +511,24 @@ namespace Dread_Knight
         static void PrintInfoOnPosition(bool isMulti)
         {
             string line = new string('-', Console.WindowWidth);
-            PrintOnPosition(0, 0, "Player 1", ConsoleColor.Black);
-            PrintOnPosition(0, 2, "Lives " + firstPlayerLives, ConsoleColor.Black);
+            string livesOne = new string('♥', playerOneLives);
+            string livesTwo = new string('♥', playerTwoLives);
+
+            PrintOnPosition(1, 0, "Player 1", ConsoleColor.White);
+            PrintOnPosition(1, 2, "Lives ", ConsoleColor.White);
+            PrintOnPosition(7, 2, livesOne, ConsoleColor.Red);
+
             if (isMulti)
             {
-                PrintOnPosition(Console.WindowWidth - 8, 0, "Player 2", ConsoleColor.Black);
-                PrintOnPosition(Console.WindowWidth - 8, 2, " Lives " + secondPlayerLives, ConsoleColor.Black);
+                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, livesTwo, ConsoleColor.Blue);
             }
-            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.Black);
-            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.Black);
-            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.Black);
-            PrintOnPosition(0, 3, "" + line, ConsoleColor.Black);
+
+            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.White);
+            PrintOnPosition(0, 3, "" + line, ConsoleColor.White);
         }
     }
 }
