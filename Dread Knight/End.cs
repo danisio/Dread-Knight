@@ -13,15 +13,31 @@ namespace Dread_Knight
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.SetCursorPosition((Console.WindowWidth - "GAME OVER".Length) / 2, Console.WindowHeight / 2);
-            Console.WriteLine("GAME OVER");
+            Console.SetCursorPosition(0,0);
+            string gameOver = @"
+                                            ███████      ███      ███   ███  ███████
+                                            ██          ██ ██     ██ █ █ ██  ██      
+                                            ██  ███    ██   ██    ██  █  ██  ██████  
+                                            ██   ██   ██ ███ ██   ██     ██  ██      
+                                            ███████  ██       ██  ██     ██  ███████
+                                                                                    
+                                                                                    
+                                            ███████  ██       ██  ███████  ███████
+                                            ██   ██   ██     ██   ██       ██   ██
+                                            ██   ██    ██   ██    ██████   ███████
+                                            ██   ██     ██ ██     ██       ██ ██   
+                                            ███████      ███      ███████  ██   ██ 
+";
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine(gameOver);
+
             for (int i = 1; i < 7; i++)
             {
                 Console.Beep(498 - i * 64, 300);
             }
             Console.Beep(70, 1000);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition((Console.WindowWidth - "GAME OVER".Length) / 2, Console.WindowHeight / 2);
+            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
             string path = "score.txt";
             if (!File.Exists(path))
             {
