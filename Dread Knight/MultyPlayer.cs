@@ -47,8 +47,8 @@ namespace Dread_Knight
         static int rocksPause = 30;
 
         //static int livesCount = 5;
-        static int playerOneLives = 5;
-        static int playerTwoLives = 5;
+        static int playerOneLives = 1;
+        static int playerTwoLives = 1;
 
         internal static void MultyPlay(bool isMulti = false)
         {
@@ -315,7 +315,7 @@ namespace Dread_Knight
                             if (playerOneLives == 0 || playerTwoLives == 0)
                                 End.GameOver(score);
                             //livesCount--;                                                       //
-                            Console.Beep(1000, 50);                                               // Checks every part of both players for collision with the enemy
+                            Console.Beep(300, 300);                                               // Checks every part of both players for collision with the enemy
                             enemies.Clear();                                                      //
                             shots.Clear();
                             rocks.Clear();
@@ -335,7 +335,7 @@ namespace Dread_Knight
                             if (playerOneLives == 0)
                                 End.GameOver(score);
                             //livesCount--;                                                       //
-                            Console.Beep(1000, 50);                                               // Checks every part of our player for collision with the enemy
+                            Console.Beep(300, 300);                                               // Checks every part of our player for collision with the enemy
                             enemies.Clear();                                                      //
                             shots.Clear();
                             rocks.Clear();
