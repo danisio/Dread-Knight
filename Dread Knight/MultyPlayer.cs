@@ -47,15 +47,15 @@ namespace Dread_Knight
         static int stepRocks = 0;
         static int rocksPause = 30;
 
-        //static int livesCount = 5;
         static int playerOneLives = 5;
         static int playerTwoLives = 5;
-        static bool playerOneDied = false;
+        static bool playerOneDied;
+        static bool playerTwoDied;
 
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
-
+            
             DrawPlayers(isMulti);
 
             while (true)
@@ -89,7 +89,7 @@ namespace Dread_Knight
                     AddNewBonusObject();
                 }
 
-                //move our player and shoot(key pressed)
+                //move players and shoot(key pressed)
                 while (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
@@ -103,6 +103,11 @@ namespace Dread_Knight
                 MoveShots();
 
                 MoveEnemies(isMulti);
+
+                MoveRocks(isMulti);
+
+                MoveBonusObject(isMulti);
+
                 // If playerOne dies, it takes player two parameters
                 if (playerOneDied)
                 {
@@ -110,20 +115,16 @@ namespace Dread_Knight
                     isMulti = false;
                     firstPlayer.str = secondPlayer.str;
                 }
+
                 // If player two dies --> single player
-                if (playerTwoLives == 0 && isMulti)
+                if (playerTwoDied)
                 {
                     isMulti = false;
                 }
 
-                MoveRocks();
-
-                MoveBonusObject(isMulti);
-
                 Console.Clear();
 
                 //draw new positions
-                
                 RedrawPlayfield(isMulti);
 
                 //draw info
@@ -335,106 +336,64 @@ namespace Dread_Knight
                 newEnemy.str = oldEnemy.str;
                 newEnemy.color = oldEnemy.color;
 
-                bool collisionPlayerEnemy = false;
-
-                if (isMulti)
+                if (newEnemy.x <= firstPlayer.x + firstPlayer.str.Length && newEnemy.y == firstPlayer.y)
                 {
-                    for (int j = 0; j < firstPlayer.str.Length; j++)                                //
-                    {                                                                             //
-                        if ((newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y) ||
-                            (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y))
-                        {
-                            if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
-                                playerOneLives--;
-                            if (newEnemy.x == secondPlayer.x + j && newEnemy.y == secondPlayer.y)
-                                playerTwoLives--;
-
-                            if (playerOneLives == 0 && playerTwoLives == 0)
-                                End.GameOver(score);
-                            // First player dies - takes parameters of second pl
-                            if (playerOneLives == 0)
-                            {
-                                playerOneDied = true;
-                                playerOneLives = playerTwoLives;
-                                playerTwoLives = 0;
-                                firstPlayer.y = secondPlayer.y;
-                            }
-                            // second player dies - exits and sets isMulti to false
-                            if (playerTwoLives == 0 && isMulti)
-                            {
-                                Console.Beep(100, 900);
-                                return;
-                            }
-
-                            //livesCount--;                                                       //
-                            Console.Beep(300, 300);                                               // Checks every part of both players for collision with the enemy
-                            enemies.Clear();                                                      //
-
-                            shots.Clear();
-                            rocks.Clear();
-                            bonusLives.Clear();
-                            collisionPlayerEnemy = true;
-                            break;
-                            // console.writeline environment.exit(0)                            
-                        }
-                    }
+                    playerOneLives--;
+                    ClearAllObjects();
+                }
+                else if (isMulti && (newEnemy.x <= secondPlayer.x + secondPlayer.str.Length && newEnemy.y == secondPlayer.y))
+                {
+                    playerTwoLives--;
+                    ClearAllObjects();
                 }
                 else
                 {
-                    for (int j = 0; j < firstPlayer.str.Length; j++)
+                    if (newEnemy.x > 0)
                     {
-                        if (newEnemy.x == firstPlayer.x + j && newEnemy.y == firstPlayer.y)
-                        {
-                            playerOneLives--;
-                            if (playerOneLives == 0)
-                                End.GameOver(score);
-
-                            //livesCount--;                                                       //
-                            Console.Beep(300, 300);                                               // Checks every part of our player for collision with the enemy
-                            enemies.Clear();                                                      //
-
-                            shots.Clear();
-                            rocks.Clear();
-                            bonusLives.Clear();
-                            collisionPlayerEnemy = true;
-                            break;
-                        }
+                        newListOfEnemies.Add(newEnemy);
                     }
-                }
-
-                if (collisionPlayerEnemy)
-                {
-                    break;
-                }
-
-                if (newEnemy.x > 0)
-                {
-                    newListOfEnemies.Add(newEnemy);
-                }
-                else if (newEnemy.x == 0)                               //
-                {                                                       //
-                    newEnemy.x++;                                       //
-                                                                        //  
-                    string tempNewEnemy = string.Empty;                 //  
-                    for (int k = 1; k < newEnemy.str.Length; k++)       //  
-                    {                                                   //
-                        tempNewEnemy += newEnemy.str[k];                //
-                    }                                                   //  Checks if the enemy reached the end of the field.
-                                                                        //  If yes, its string is gradually trimmed from its beginning.
-                    if (newEnemy.str.Length == 0)                       //
-                    {                                                   //
-                        continue;                                       //
-                    }
-                                                                        //
-                    newEnemy.str = tempNewEnemy;                        //
-                    newListOfEnemies.Add(newEnemy);                     //
                 }
             }
 
             enemies = newListOfEnemies;
+
+            if (!isMulti)
+            {
+                if (playerOneLives == 0)
+                {
+                    End.GameOver(score);
+                }
+            }
+            else
+            {
+                if (playerOneLives == 0 && playerTwoLives == 0)
+                {
+                    End.GameOver(score);
+                }
+                else if (playerOneLives == 0) // First player dies - takes parameters of second player --> single player
+                {
+                    playerOneDied = true;
+                    playerOneLives = playerTwoLives;
+                    playerTwoLives = 0;
+                    firstPlayer.y = secondPlayer.y;
+                }
+                else if (playerTwoLives == 0)
+                {
+                    playerTwoDied = true;
+                }
+            }
         }
 
-        static void MoveRocks()
+        private static void ClearAllObjects()
+        {
+            Console.Beep(300, 300);
+            enemies.Clear();
+            shots.Clear();
+            rocks.Clear();
+            bonusLives.Clear();
+        }
+
+        static void MoveRocks(bool isMulti)
         {
             List<Object> newListOfRocks = new List<Object>();
             for (int i = 0; i < rocks.Count; i++)
@@ -446,7 +405,8 @@ namespace Dread_Knight
                 newRock.str = oldRock.str;
                 newRock.color = oldRock.color;
 
-                if (newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y)
+                if ((newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y) ||
+                   (isMulti && (newRock.x <= secondPlayer.x + secondPlayer.str.Length && newRock.y == secondPlayer.y)))
                 {
                     score -= 20;
                     if (score < 0)
