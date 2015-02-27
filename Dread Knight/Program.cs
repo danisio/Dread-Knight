@@ -20,9 +20,13 @@ namespace Dread_Knight
             int numberOfPlayers = Intro.Menu();
 
             if (numberOfPlayers == 1)
+            {
                 MultyPlayer.MultyPlay();
+            }
             else
+            {
                 MultyPlayer.MultyPlay(true);
+            }
         }
     }
 }
