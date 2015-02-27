@@ -55,7 +55,7 @@ namespace Dread_Knight
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
-            
+
             DrawPlayers(isMulti);
 
             while (true)
@@ -111,7 +111,7 @@ namespace Dread_Knight
                 // If playerOne dies, it takes player two parameters
                 if (playerOneDied)
                 {
-                    playerOneDied = false;
+                    //playerOneDied = false;   UNNECESSARY -> prevents printing second player info alone
                     isMulti = false;
                     firstPlayer.str = secondPlayer.str;
                 }
@@ -131,7 +131,7 @@ namespace Dread_Knight
                 PrintInfoOnPosition(isMulti);
 
                 //slow down program
-                Thread.Sleep(150 - speed);
+                Thread.Sleep(30 - speed);
             }
         }
 
@@ -344,7 +344,7 @@ namespace Dread_Knight
                 else if (isMulti && (newEnemy.x <= secondPlayer.x + secondPlayer.str.Length && newEnemy.y == secondPlayer.y))
                 {
                     playerTwoLives--;
-                    ClearAllObjects();
+                    ClearAllObjects(true);
                 }
                 else
                 {
@@ -384,9 +384,20 @@ namespace Dread_Knight
             }
         }
 
-        private static void ClearAllObjects()
+        private static void ClearAllObjects(bool isMulti = false)
         {
-            Console.Beep(300, 300);
+            if (playerOneLives == 0)
+            {
+                Console.Beep(100, 900);
+            }
+            else if (playerTwoLives == 0 && isMulti)
+            {
+                Console.Beep(100, 900);
+            }
+            else 
+            {
+                Console.Beep(300, 300);
+            }
             enemies.Clear();
             shots.Clear();
             rocks.Clear();

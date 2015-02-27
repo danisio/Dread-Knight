@@ -15,44 +15,34 @@ namespace Dread_Knight
 
         internal static int Menu()
         {
-            Console.Clear();
-            Console.SetCursorPosition(20, 20);
-            Console.WriteLine("('0.0)");
-            Console.SetCursorPosition(60, 20);
-            Console.WriteLine("(■_■')");
-            Thread.Sleep(950);
-            Console.SetCursorPosition(20, 18);
-            Console.WriteLine("── Hello, Doncho!");
-            Thread.Sleep(950);
-            Console.SetCursorPosition(60, 18);
-            Console.WriteLine("── Hello, Dread Knight!");
-            Thread.Sleep(950);
-            Console.SetCursorPosition(20, 19);
-            Console.WriteLine("── Do you want some action?");
-            Thread.Sleep(950);
-            Console.SetCursorPosition(53, 10);
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("   PRESS Y or N");
-            ConsoleKeyInfo pressedKey = Console.ReadKey(true);
-            while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N)
+            ConsoleKeyInfo pressedKey = new ConsoleKeyInfo();
+            bool isFirstTime = true;
+            do
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.SetCursorPosition(20, 20);
                 Console.WriteLine("('0.0)");
                 Console.SetCursorPosition(60, 20);
                 Console.WriteLine("(■_■')");
+                if (isFirstTime) Thread.Sleep(950);
                 Console.SetCursorPosition(20, 18);
                 Console.WriteLine("── Hello, Doncho!");
+                if (isFirstTime) Thread.Sleep(950);
                 Console.SetCursorPosition(60, 18);
                 Console.WriteLine("── Hello, Dread Knight!");
+                if (isFirstTime) Thread.Sleep(950);
                 Console.SetCursorPosition(20, 19);
                 Console.WriteLine("── Do you want some action?");
+                if (isFirstTime) Thread.Sleep(950);
                 Console.SetCursorPosition(53, 10);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("   PRESS Y or N");
+                Console.SetCursorPosition(Console.WindowWidth / 2, 11);
                 pressedKey = Console.ReadKey();
-            }
+                isFirstTime = false;
+            } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
+
             Console.ForegroundColor = ConsoleColor.Yellow;
             if (pressedKey.Key == ConsoleKey.Y)
             {
