@@ -20,43 +20,48 @@ namespace Dread_Knight
             do
             {
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.SetCursorPosition(20, 20);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(30, 21);
                 Console.WriteLine("('0.0)");
-                Console.SetCursorPosition(60, 20);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(70, 21);
                 Console.WriteLine("(■_■')");
                 if (isFirstTime) Thread.Sleep(950);
-                Console.SetCursorPosition(20, 18);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(30, 18);
                 Console.WriteLine("── Hello, Doncho!");
                 if (isFirstTime) Thread.Sleep(950);
-                Console.SetCursorPosition(60, 18);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.SetCursorPosition(70, 18);
                 Console.WriteLine("── Hello, Dread Knight!");
                 if (isFirstTime) Thread.Sleep(950);
-                Console.SetCursorPosition(20, 19);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(30, 19);
                 Console.WriteLine("── Do you want some action?");
                 if (isFirstTime) Thread.Sleep(950);
                 Console.SetCursorPosition(53, 10);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("   PRESS Y or N");
-                Console.SetCursorPosition(Console.WindowWidth / 2, 11);
+                Console.SetCursorPosition(Console.WindowWidth / 2, 12);
                 pressedKey = Console.ReadKey(true);
                 isFirstTime = false;
             } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            
+            Console.Write(char.ToUpper(pressedKey.KeyChar));
+            Console.ForegroundColor = ConsoleColor.Green;
             if (pressedKey.Key == ConsoleKey.Y)
             {
-                Console.SetCursorPosition(60, 19);
+                Console.SetCursorPosition(70, 19);
                 Console.WriteLine("── Sir, YES, Sir!");
-                Thread.Sleep(950);
+                Thread.Sleep(1500);
                 Console.Clear();
                 return 2;
             }
             if (pressedKey.Key == ConsoleKey.N)
             {
-                Console.SetCursorPosition(60, 19);
+                Console.SetCursorPosition(70, 19);
                 Console.WriteLine("── I've got some bad news, Sir.");
-                Thread.Sleep(1250);
+                Thread.Sleep(1500);
                 Console.Clear();
                 return 1;
             }

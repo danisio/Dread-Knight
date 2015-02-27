@@ -47,23 +47,33 @@ namespace Dread_Knight
       |     _     |                  |     _     |      []         []      |           ||+||            
       |    /+\    |                  |    /+\    |                         |           |^^^|          
       |   |+|+|   |                  |   |+|+|   |                         |           |   |            
-      |   |+|+|   |      _,--,_      |   |+|+|   |                         |           |   |            
-      |   |+|+|   |     / |  | \     |   |+|+|   |                         |           |  /            
-      |   ^^^^^   |     | |  | |     |   ^^^^^   |                         |           | /              
-      |           |     | |  <&>     |           |                         |           |/               
-      |           |     | |  | |     |           |                         |           |                
-      |           |     | |  | |     |           |                         |           |                
+      |   |+|+|   |     _,-^-,_      |   |+|+|   |                         |           |   |            
+      |   |+|+|   |    / |   | \     |   |+|+|   |                         |           |  /            
+      |   ^^^^^   |    | |   | |     |   ^^^^^   |                         |           | /              
+      |           |    | |   <&>     |           |                         |           |/               
+      |           |    | |   | |     |           |                         |           |                
+      |           |    | |   | |     |           |                         |           |                
 `^^^^^^^^^^^`^^^^`^^^`^^^^^^^^^^^^`^`^`^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^^^^^^`^^^^`^^^`^^^^^^^`^^^^`^^^`^^^^^^^^`^^^^`^^^`^^^^
 ");
-
+                                                /* New logo - even uglier :) */
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(26, 21);
-            Console.Write("/\\/\\");
-            Console.SetCursorPosition(27, 22);
-            Console.Write("/\\");
-            Console.SetCursorPosition(27, 23);
-            Console.Write("\\/");
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.SetCursorPosition(25, 20);
+            Console.Write("▄   ▄");
+            Console.SetCursorPosition(24, 21);
+            Console.Write("▀ ▀▄▀ ▀");
+            Console.SetCursorPosition(25, 22);
+            Console.Write("▄▀ ▀▄");
+            Console.SetCursorPosition(26, 23);
+            Console.Write("▀▄▀");
+                                                /* Old logo */
+            //Console.ForegroundColor = ConsoleColor.Green;
+            //Console.SetCursorPosition(26, 21); 
+            //Console.Write("/\\/\\"); 
+            //Console.SetCursorPosition(27, 22); 
+            //Console.Write("/\\"); 
+            //Console.SetCursorPosition(27, 23); 
+            //Console.Write("\\/"); 
+
         }
 
         internal static void FirstStage()
@@ -72,11 +82,12 @@ namespace Dread_Knight
             dreadNight.x = 100;
             dreadNight.y = 30;
             dreadNight.s = "(0.0')";
-            dreadNight.color = ConsoleColor.Yellow;
+            dreadNight.color = ConsoleColor.White;
 
             while (dreadNight.x > 24)
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Castle();
                 PrintOnPosition(dreadNight.x, dreadNight.y, dreadNight.s, dreadNight.color);
                 dreadNight.x = dreadNight.x - 8;

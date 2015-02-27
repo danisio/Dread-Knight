@@ -114,6 +114,7 @@ namespace Dread_Knight
                     //playerOneDied = false;   UNNECESSARY -> prevents printing second player info alone
                     isMulti = false;
                     firstPlayer.str = secondPlayer.str;
+                    firstPlayer.color = secondPlayer.color;
                 }
 
                 // If player two dies --> single player
@@ -147,7 +148,7 @@ namespace Dread_Knight
                 secondPlayer.x = 0;
                 secondPlayer.y = Console.WindowHeight / 2 + 1;
                 secondPlayer.str = " ('■_■)-=╦╤── ";
-                secondPlayer.color = ConsoleColor.White;
+                secondPlayer.color = ConsoleColor.Green;
             }
         }
 
@@ -220,7 +221,9 @@ namespace Dread_Knight
                 ConsoleColor.DarkGreen, 
                 ConsoleColor.Red,
                 ConsoleColor.Magenta,
-                ConsoleColor.White
+                ConsoleColor.White,
+                ConsoleColor.Cyan,
+                ConsoleColor.DarkGray
             };
 
             newEnemy.color = enemyColors[randomGenerator.Next(0, enemyColors.Length)];
@@ -524,9 +527,9 @@ namespace Dread_Knight
             string livesTwo = new string('♥', playerTwoLives);
             if (playerOneDied)
             {
-                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
-                PrintOnPosition(Console.WindowWidth - 12, 2, " Lives", ConsoleColor.White);
-                PrintOnPosition(Console.WindowWidth - 6, 2, livesOne, ConsoleColor.Blue);
+                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 2, livesOne, ConsoleColor.Blue);
             }
             else
             {
@@ -538,7 +541,7 @@ namespace Dread_Knight
 
             if (isMulti)
             {
-                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
                 PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 12, 2, livesTwo, ConsoleColor.Blue);
             }
