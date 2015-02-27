@@ -103,11 +103,17 @@ namespace Dread_Knight
                 MoveShots();
 
                 MoveEnemies(isMulti);
+                // If playerOne dies, it takes player two parameters
                 if (playerOneDied)
                 {
                     playerOneDied = false;
                     isMulti = false;
                     firstPlayer.str = secondPlayer.str;
+                }
+                // If player two dies --> single player
+                if (playerTwoLives == 0 && isMulti)
+                {
+                    isMulti = false;
                 }
 
                 MoveRocks();
@@ -124,7 +130,7 @@ namespace Dread_Knight
                 PrintInfoOnPosition(isMulti);
 
                 //slow down program
-                Thread.Sleep(30 - speed);
+                Thread.Sleep(150 - speed);
             }
         }
 
@@ -345,24 +351,19 @@ namespace Dread_Knight
 
                             if (playerOneLives == 0 && playerTwoLives == 0)
                                 End.GameOver(score);
-
+                            // First player dies - takes parameters of second pl
                             if (playerOneLives == 0)
                             {
-                                Console.Beep(100, 900);
                                 playerOneDied = true;
                                 playerOneLives = playerTwoLives;
                                 playerTwoLives = 0;
                                 firstPlayer.y = secondPlayer.y;
-                                enemies.Clear();                                                      //
-                                shots.Clear();
-                                rocks.Clear();
-                                Console.Clear();
                             }
-
+                            // second player dies - exits and sets isMulti to false
                             if (playerTwoLives == 0 && isMulti)
                             {
+                                Console.Beep(100, 900);
                                 return;
-                                //MultyPlay(false);
                             }
 
                             //livesCount--;                                                       //
@@ -413,18 +414,18 @@ namespace Dread_Knight
                 else if (newEnemy.x == 0)                               //
                 {                                                       //
                     newEnemy.x++;                                       //
-                    //  
+                                                                        //  
                     string tempNewEnemy = string.Empty;                 //  
                     for (int k = 1; k < newEnemy.str.Length; k++)       //  
                     {                                                   //
                         tempNewEnemy += newEnemy.str[k];                //
                     }                                                   //  Checks if the enemy reached the end of the field.
-                    //  If yes, its string is gradually trimmed from its beginning.
+                                                                        //  If yes, its string is gradually trimmed from its beginning.
                     if (newEnemy.str.Length == 0)                       //
                     {                                                   //
                         continue;                                       //
                     }
-                    //
+                                                                        //
                     newEnemy.str = tempNewEnemy;                        //
                     newListOfEnemies.Add(newEnemy);                     //
                 }
@@ -465,7 +466,6 @@ namespace Dread_Knight
             rocks = newListOfRocks;
         }
 
-        static void RedrawPlayfield(bool isMulti = false)
         static void MoveBonusObject(bool isMulti)
         {
             List<Object> newListOfBonus = new List<Object>();
@@ -499,7 +499,7 @@ namespace Dread_Knight
             bonusLives = newListOfBonus;
         }
 
-        static void RedrawPlayfield()
+        static void RedrawPlayfield(bool isMulti = false)
         {
             PrintOnPosition(firstPlayer.x, firstPlayer.y, firstPlayer.str, firstPlayer.color);
             if (isMulti)
