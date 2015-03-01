@@ -54,6 +54,8 @@ namespace Dread_Knight
 
         static int playerOneAmmo = 10;
         static int playerTwoAmmo = 10;
+
+        static int time = 0;
         
         internal static void MultyPlay(bool isMulti = false)
         {
@@ -102,8 +104,15 @@ namespace Dread_Knight
                         MoveSecondPlayer(pressedKey);
                     }
                 }
-
+                
+                time++;
+                if (time == 10)
+                {
+                    score = score + 1;
+                    time = 0;
+                }
                 MoveShots();
+                
 
                 MoveEnemies(isMulti);
 
