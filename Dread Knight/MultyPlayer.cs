@@ -24,7 +24,7 @@ namespace Dread_Knight
         static List<Object> enemies = new List<Object>();
         static List<Object> shots = new List<Object>();
         static List<Object> rocks = new List<Object>();
-        static List<Object> bonusLives = new List<Object>();
+        static List<Object> bonuses = new List<Object>();
 
         static int[,] levelsData = //array with data about levels -> level 1-100 points, level 2-200 points etc.
                     {{1, 100},
@@ -47,11 +47,14 @@ namespace Dread_Knight
         static int stepRocks = 0;
         static int rocksPause = 30;
 
-        static int playerOneLives = 5;
-        static int playerTwoLives = 5;
+        static int playerOneLives = 1;
+        static int playerTwoLives = 1;
         static bool playerOneDied;
         static bool playerTwoDied;
 
+        static int playerOneAmmo = 10;
+        static int playerTwoAmmo = 10;
+        
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
@@ -83,8 +86,8 @@ namespace Dread_Knight
                 stepRocks++;
 
                 //add bonus "live"
-                int chance = randomGenerator.Next(0, 320);
-                if (chance <= 1)
+                int chance = randomGenerator.Next(0, 150);
+                if (chance < 1)
                 {
                     AddNewBonusObject();
                 }
@@ -274,12 +277,13 @@ namespace Dread_Knight
 
         static void AddNewBonusObject()
         {
-            Object newBonusLive = new Object();
-            newBonusLive.x = Console.WindowWidth - 1;
-            newBonusLive.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
-            newBonusLive.str = "♥";
-            newBonusLive.color = ConsoleColor.Red;
-            bonusLives.Add(newBonusLive);
+            string[] bonusLooks = new string[] { "♥", "●" };
+            Object newBonus = new Object();
+            newBonus.x = Console.WindowWidth - 1;
+            newBonus.y = randomGenerator.Next(sizeOfDrawField, Console.WindowHeight);
+            newBonus.str = bonusLooks[randomGenerator.Next(0, bonusLooks.Length)];
+            newBonus.color = ConsoleColor.Red;
+            bonuses.Add(newBonus);
         }
 
         static void Shoot(Object player)
@@ -311,7 +315,11 @@ namespace Dread_Knight
             }
             else if (pressedKey.Key == ConsoleKey.Spacebar)
             {
-                Shoot(firstPlayer);
+                if (playerOneAmmo > 0)
+                {
+                    playerOneAmmo--;
+                    Shoot(firstPlayer);
+                }
             }
         }
 
@@ -334,7 +342,11 @@ namespace Dread_Knight
             }
             else if (pressedKey.Key == ConsoleKey.Tab)
             {
-                Shoot(secondPlayer);
+                if (playerTwoAmmo > 0)
+                {
+                    playerTwoAmmo--;
+                    Shoot(secondPlayer);
+                }        
             }
         }
 
@@ -446,7 +458,7 @@ namespace Dread_Knight
             enemies.Clear();
             shots.Clear();
             rocks.Clear();
-            bonusLives.Clear();
+            bonuses.Clear();
         }
 
         static void MoveRocks(bool isMulti)
@@ -512,22 +524,34 @@ namespace Dread_Knight
         static void MoveBonusObject(bool isMulti)
         {
             List<Object> newListOfBonus = new List<Object>();
-            for (int i = 0; i < bonusLives.Count; i++)
+            for (int i = 0; i < bonuses.Count; i++)
             {
-                Object oldBonus = bonusLives[i];
+                Object oldBonus = bonuses[i];
                 Object newBonus = new Object();
                 newBonus.x = oldBonus.x - 1;
                 newBonus.y = oldBonus.y;
                 newBonus.str = oldBonus.str;
                 newBonus.color = oldBonus.color;
-
+                //"♥", "●"
                 if (newBonus.x <= firstPlayer.x + firstPlayer.str.Length && newBonus.y == firstPlayer.y)
                 {
-                    playerOneLives++;
+                    if (newBonus.str == "♥")
+                    {
+                        if (playerOneLives < 5)
+                            playerOneLives++;
+                    }
+                    else if (newBonus.str == "●")
+                        playerOneAmmo = 10;
                 }
                 else if (isMulti && (newBonus.x <= secondPlayer.x + secondPlayer.str.Length && newBonus.y == secondPlayer.y))
                 {
-                    playerTwoLives++;
+                    if (newBonus.str == "♥")
+                    {
+                        if (playerTwoLives < 5)
+                            playerTwoLives++;
+                    }
+                    else if (newBonus.str == "●")
+                        playerOneAmmo = 10;
                 }
                 else
                 {
@@ -538,7 +562,7 @@ namespace Dread_Knight
                 }
             }
 
-            bonusLives = newListOfBonus;
+            bonuses = newListOfBonus;
         }
 
         static void RedrawPlayfield(bool isMulti = false)
@@ -561,7 +585,7 @@ namespace Dread_Knight
             {
                 PrintOnPosition(rock.x, rock.y, rock.str, rock.color);
             }
-            foreach (Object bonus in bonusLives)
+            foreach (Object bonus in bonuses)
             {
                 PrintOnPosition(bonus.x, bonus.y, bonus.str, bonus.color);
             }
@@ -594,15 +618,19 @@ namespace Dread_Knight
             string line = new string('▄', Console.WindowWidth);
             string livesOne = new string('♥', playerOneLives);
             string livesTwo = new string('♥', playerTwoLives);
+            string ammoOne = new string('●', playerOneAmmo);
+            string ammoTwo = new string('●', playerTwoAmmo);
             if (playerOneDied)
             {
                 PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - playerOneAmmo - 1, 1, ammoOne, ConsoleColor.Green);
                 PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 12, 2, livesOne, ConsoleColor.Blue);
             }
             else
             {
                 PrintOnPosition(1, 0, "Player 1", ConsoleColor.White);
+                PrintOnPosition(1, 1, ammoOne, ConsoleColor.White);
                 PrintOnPosition(1, 2, "Lives ", ConsoleColor.White);
                 PrintOnPosition(7, 2, livesOne, ConsoleColor.Red);
             }
@@ -611,6 +639,7 @@ namespace Dread_Knight
             if (isMulti)
             {
                 PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - playerTwoAmmo -1 , 1, ammoTwo, ConsoleColor.Green);
                 PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 12, 2, livesTwo, ConsoleColor.Blue);
             }

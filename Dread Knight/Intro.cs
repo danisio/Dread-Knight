@@ -63,7 +63,6 @@ namespace Dread_Knight
             Console.SetCursorPosition(30, 19);
             Console.WriteLine("── Do you want some action?");
 
-            Console.Write(char.ToUpper(pressedKey.KeyChar));
             Console.ForegroundColor = ConsoleColor.Green;
             if (pressedKey.Key == ConsoleKey.Y)
             {
