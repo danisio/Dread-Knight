@@ -47,8 +47,8 @@ namespace Dread_Knight
         static int stepRocks = 0;
         static int rocksPause = 30;
 
-        static int playerOneLives = 1;
-        static int playerTwoLives = 1;
+        static int playerOneLives = 5;
+        static int playerTwoLives = 5;
         static bool playerOneDied;
         static bool playerTwoDied;
 
