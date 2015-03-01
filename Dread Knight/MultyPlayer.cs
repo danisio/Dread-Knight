@@ -62,8 +62,7 @@ namespace Dread_Knight
             {
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
-
-                int chance = randomGenerator.Next(0, 120);
+                CollisionShotAndRock();
 
                 //add new enemy every "enemiesPause" step
                 if (stepEnemy % enemiesPause == 0)
@@ -84,6 +83,7 @@ namespace Dread_Knight
                 stepRocks++;
 
                 //add bonus "live"
+                int chance = randomGenerator.Next(0, 320);
                 if (chance <= 1)
                 {
                     AddNewBonusObject();
@@ -105,6 +105,7 @@ namespace Dread_Knight
                 MoveEnemies(isMulti);
 
                 MoveRocks(isMulti);
+                
 
                 MoveBonusObject(isMulti);
 
@@ -162,7 +163,9 @@ namespace Dread_Knight
                 for (int j = 0; j < shots.Count; j++)
                 {
                     if ((enemies[i].x == shots[j].x && enemies[i].y == shots[j].y) ||  //check current positions of enemy and shot 
-                         (enemies[i].x == shots[j].x + 1 && enemies[i].y == shots[j].y))  //same enemy and next position of the shot (avoids mismatch shot and enemy)
+                        (enemies[i].x == shots[j].x + 1 && enemies[i].y == shots[j].y) ||  //same enemy and next position of the shot (avoids mismatch shot and enemy)
+                        (enemies[i].x == shots[j].x + 2 && enemies[i].y == shots[j].y) ||
+                        (enemies[i].x == shots[j].x + 3 && enemies[i].y == shots[j].y))
                     {
                         enemiesToRemove.Add(enemies[i]);
                         shotsToRemove.Add(shots[j]);
@@ -205,11 +208,40 @@ namespace Dread_Knight
 
             shots = newListOfShots;
         }
+        static void CollisionShotAndRock()
+        {
+            List<object> shotsToRemove = new List<object>();
+
+            for (int i = 0; i < rocks.Count; i++)
+            {
+                for (int j = 0; j < shots.Count; j++)
+                {
+                    if ((rocks[i].x == shots[j].x && rocks[i].y == shots[j].y) ||  //check current positions of enemy and shot 
+                        (rocks[i].x == shots[j].x + 1 && rocks[i].y == shots[j].y) ||
+                        (rocks[i].x == shots[j].x + 2 && rocks[i].y == shots[j].y) ||
+                        (rocks[i].x == shots[j].x + 3 && rocks[i].y == shots[j].y))
+                    {
+                        shotsToRemove.Add(shots[j]);
+                    }
+                }
+            }
+
+            List<Object> newListOfShots = new List<Object>();
+            for (int i = 0; i < shots.Count; i++)
+            {
+                if (!shotsToRemove.Contains(shots[i]))
+                {
+                    newListOfShots.Add(shots[i]);
+                }
+            }
+
+            shots = newListOfShots;
+        }
 
         static void AddNewEnemy()
         {
             //  How enemies would look
-            string[] enemyLooks = new string[] { ".\\/.", ".\\,,/.", "o\\_/o", "*\\)_(/*", "+|,,,|+", "'\\]..[/'", "(niki=<", "<<-ivo[#", "-=evlogi{" };
+            string[] enemyLooks = new string[] { ".\\|/.", ".\\,,/.", "o\\_/o", "*\\)_(/*", "+|,,,|+", "'\\]..[/'", "(niki=<", "<<-ivo[#", "-=evlogi{" };
 
             Object newEnemy = new Object();
             newEnemy.x = Console.WindowWidth - 1;
@@ -313,7 +345,7 @@ namespace Dread_Knight
             {
                 Object oldShot = shots[i];
                 Object newShot = new Object();
-                newShot.x = oldShot.x + 1;
+                newShot.x = oldShot.x + 3;
                 newShot.y = oldShot.y;
                 newShot.str = oldShot.str;
                 newShot.color = oldShot.color;
@@ -342,11 +374,21 @@ namespace Dread_Knight
                 if (newEnemy.x <= firstPlayer.x + firstPlayer.str.Length && newEnemy.y == firstPlayer.y)
                 {
                     playerOneLives--;
+                    score -= 20;
+                    if (score < 0)
+                    {
+                        score = 0;
+                    }
                     ClearAllObjects();
                 }
                 else if (isMulti && (newEnemy.x <= secondPlayer.x + secondPlayer.str.Length && newEnemy.y == secondPlayer.y))
                 {
                     playerTwoLives--;
+                    score -= 20;
+                    if (score < 0)
+                    {
+                        score = 0;
+                    }
                     ClearAllObjects(true);
                 }
                 else
@@ -419,14 +461,15 @@ namespace Dread_Knight
                 newRock.str = oldRock.str;
                 newRock.color = oldRock.color;
 
-                if ((newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y) ||
-                   (isMulti && (newRock.x <= secondPlayer.x + secondPlayer.str.Length && newRock.y == secondPlayer.y)))
+                if (newRock.x <= firstPlayer.x + firstPlayer.str.Length && newRock.y == firstPlayer.y)
                 {
-                    score -= 20;
-                    if (score < 0)
-                    {
-                        score = 0;
-                    }
+                    playerOneLives--;
+                    ClearAllObjects();
+                }
+                else if (isMulti && (newRock.x <= secondPlayer.x + secondPlayer.str.Length && newRock.y == secondPlayer.y))
+                {
+                    playerTwoLives--;
+                    ClearAllObjects(true);
                 }
                 else
                 {
@@ -438,6 +481,32 @@ namespace Dread_Knight
             }
 
             rocks = newListOfRocks;
+
+            if (!isMulti)
+            {
+                if (playerOneLives == 0)
+                {
+                    End.GameOver(score);
+                }
+            }
+            else
+            {
+                if (playerOneLives == 0 && playerTwoLives == 0)
+                {
+                    End.GameOver(score);
+                }
+                else if (playerOneLives == 0) // First player dies - takes parameters of second player --> single player
+                {
+                    playerOneDied = true;
+                    playerOneLives = playerTwoLives;
+                    playerTwoLives = 0;
+                    firstPlayer.y = secondPlayer.y;
+                }
+                else if (playerTwoLives == 0)
+                {
+                    playerTwoDied = true;
+                }
+            }
         }
 
         static void MoveBonusObject(bool isMulti)

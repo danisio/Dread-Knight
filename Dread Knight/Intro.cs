@@ -46,7 +46,23 @@ namespace Dread_Knight
                 pressedKey = Console.ReadKey(true);
                 isFirstTime = false;
             } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
-            
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(30, 21);
+            Console.WriteLine("('0.0)");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(70, 21);
+            Console.WriteLine("(■_■')");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(30, 18);
+            Console.WriteLine("── Hello, Doncho!");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(70, 18);
+            Console.WriteLine("── Hello, Dread Knight!");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(30, 19);
+            Console.WriteLine("── Do you want some action?");
+
             Console.Write(char.ToUpper(pressedKey.KeyChar));
             Console.ForegroundColor = ConsoleColor.Green;
             if (pressedKey.Key == ConsoleKey.Y)
