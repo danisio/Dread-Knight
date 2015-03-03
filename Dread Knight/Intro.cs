@@ -17,6 +17,7 @@ namespace Dread_Knight
         {
             ConsoleKeyInfo pressedKey = new ConsoleKeyInfo();
             bool isFirstTime = true;
+
             do
             {
                 Console.Clear();
@@ -46,6 +47,7 @@ namespace Dread_Knight
                 pressedKey = Console.ReadKey(true);
                 isFirstTime = false;
             } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
+            
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(30, 21);

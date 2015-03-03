@@ -13,21 +13,18 @@ namespace Dread_Knight
         internal static void GameOver(int score)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.SetCursorPosition(0,0);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.SetCursorPosition(0, 0);
             string gameOver = @"
-                                            ███████      ███      ███   ███  ███████
-                                            ██          ██ ██     ██ █ █ ██  ██      
-                                            ██  ███    ██   ██    ██  █  ██  ██████  
-                                            ██   ██   ██ ███ ██   ██     ██  ██      
-                                            ███████  ██       ██  ██     ██  ███████
-                                                                                    
-                                                                                    
-                                            ███████  ██       ██  ███████  ███████
-                                            ██   ██   ██     ██   ██       ██   ██
-                                            ██   ██    ██   ██    ██████   ███████
-                                            ██   ██     ██ ██     ██       ██ ██   
-                                            ███████      ███      ███████  ██   ██ 
+
+
+                                 _____          __  __ ______    ______      ________ _____  
+                                / ____|   /\   |  \/  |  ____|  / __ \ \    / /  ____|  __ \ 
+                               | |  __   /  \  | \  / | |__    | |  | \ \  / /| |__  | |__) |
+                               | | |_ | / /\ \ | |\/| |  __|   | |  | |\ \/ / |  __| |  _  / 
+                               | |__| |/ ____ \| |  | | |____  | |__| | \  /  | |____| | \ \ 
+                                \_____/_/    \_\_|  |_|______|  \____/   \/   |______|_|  \_\
+                                                              
 ";
             Console.SetCursorPosition(0, 0);
             Console.WriteLine(gameOver);
@@ -36,40 +33,52 @@ namespace Dread_Knight
             {
                 Console.Beep(498 - i * 64, 300);
             }
+
             Task.Run(() =>
             {
                 SpeechSynthesizer synth = new SpeechSynthesizer();
                 synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Senior);
                 synth.SpeakAsync("Game over!");
             });
+
             Console.Beep(70, 1000);
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
+           
             string path = "score.txt";
-            if (!File.Exists(path))
+            
+            try
             {
-                string createText = Convert.ToString(score);
-                File.WriteAllText(path, createText);
-                Console.SetCursorPosition((Console.WindowWidth - "You made the new HIGH SCORE: {0}".Length) / 2, Console.WindowHeight / 2 + 1);
-                Console.WriteLine("You made the new HIGH SCORE: {0}", score);
-            }
-            else
-            {
-                string readText = File.ReadAllText("score.txt");
-                if (int.Parse(readText) < score)
+                if (!File.Exists(path))
                 {
-                    File.WriteAllText(path, Convert.ToString(score));
+                    string createText = Convert.ToString(score);
+                    File.WriteAllText(path, createText);
                     Console.SetCursorPosition((Console.WindowWidth - "You made the new HIGH SCORE: {0}".Length) / 2, Console.WindowHeight / 2 + 1);
                     Console.WriteLine("You made the new HIGH SCORE: {0}", score);
                 }
                 else
                 {
-                    Console.SetCursorPosition((Console.WindowWidth - "High Score: {0}".Length) / 2, Console.WindowHeight / 2 + 1);
-                    Console.WriteLine("High Score: {0}", readText);
-                    Console.SetCursorPosition((Console.WindowWidth - "Your Score: {0}".Length) / 2, Console.WindowHeight / 2 + 2);
-                    Console.WriteLine("Your Score: {0}", score);
+                    string readText = File.ReadAllText("score.txt");
+                    if (int.Parse(readText) < score)
+                    {
+                        File.WriteAllText(path, Convert.ToString(score));
+                        Console.SetCursorPosition((Console.WindowWidth - "You made the new HIGH SCORE: {0}".Length) / 2, Console.WindowHeight / 2 + 1);
+                        Console.WriteLine("You made the new HIGH SCORE: {0}", score);
+                    }
+                    else
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - "High Score: {0}".Length) / 2, Console.WindowHeight / 2 + 1);
+                        Console.WriteLine("High Score: {0}", readText);
+                        Console.SetCursorPosition((Console.WindowWidth - "Your Score: {0}".Length) / 2, Console.WindowHeight / 2 + 2);
+                        Console.WriteLine("Your Score: {0}", score);
+                    }
                 }
             }
+            catch (FileLoadException)
+            {
+                Console.WriteLine("Unable to load file with High Scores");
+            }
+
             Console.ReadLine();
             Environment.Exit(0);
         }

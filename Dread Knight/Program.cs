@@ -1,6 +1,7 @@
 ﻿using System;
 using Dread_Knight;
 using System.Media;
+using System.IO;
 
 namespace Dread_Knight
 {
@@ -8,8 +9,16 @@ namespace Dread_Knight
     {
         static void Main()
         {
-            SoundPlayer sound = new SoundPlayer("../../Music/intro.wav");
-            sound.PlayLooping();
+            try
+            {
+                SoundPlayer sound = new SoundPlayer("../../intro.wav");
+                sound.PlayLooping();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("File intro.wav not found");
+            }
+
             Console.BufferHeight = Console.WindowHeight = 35;
             Console.BufferWidth = Console.WindowWidth = 125;
 

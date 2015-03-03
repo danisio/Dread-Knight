@@ -56,7 +56,7 @@ namespace Dread_Knight
         static int playerTwoAmmo = 10;
 
         static int time = 0;
-        
+
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
@@ -104,7 +104,7 @@ namespace Dread_Knight
                         MoveSecondPlayer(pressedKey);
                     }
                 }
-                
+
                 time++;
                 if (time == 10)
                 {
@@ -112,12 +112,12 @@ namespace Dread_Knight
                     time = 0;
                 }
                 MoveShots();
-                
+
 
                 MoveEnemies(isMulti);
 
                 MoveRocks(isMulti);
-                
+
 
                 MoveBonusObject(isMulti);
 
@@ -355,7 +355,7 @@ namespace Dread_Knight
                 {
                     playerTwoAmmo--;
                     Shoot(secondPlayer);
-                }        
+                }
             }
         }
 
@@ -460,7 +460,7 @@ namespace Dread_Knight
             {
                 Console.Beep(100, 900);
             }
-            else 
+            else
             {
                 Console.Beep(300, 300);
             }
@@ -631,9 +631,9 @@ namespace Dread_Knight
             string ammoTwo = new string('●', playerTwoAmmo);
             if (playerOneDied)
             {
-                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - 9, 0, "Player 2", ConsoleColor.Green);
                 PrintOnPosition(Console.WindowWidth - playerOneAmmo - 1, 1, ammoOne, ConsoleColor.Green);
-                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 7, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 12, 2, livesOne, ConsoleColor.Blue);
             }
             else
@@ -647,15 +647,14 @@ namespace Dread_Knight
 
             if (isMulti)
             {
-                PrintOnPosition(Console.WindowWidth - 12, 0, "Player 2", ConsoleColor.Green);
-                PrintOnPosition(Console.WindowWidth - playerTwoAmmo -1 , 1, ammoTwo, ConsoleColor.Green);
-                PrintOnPosition(Console.WindowWidth - 6, 2, " Lives", ConsoleColor.White);
+                PrintOnPosition(Console.WindowWidth - 9, 0, "Player 2", ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - playerTwoAmmo - 1, 1, ammoTwo, ConsoleColor.Green);
+                PrintOnPosition(Console.WindowWidth - 7, 2, " Lives", ConsoleColor.White);
                 PrintOnPosition(Console.WindowWidth - 12, 2, livesTwo, ConsoleColor.Blue);
             }
 
-            PrintOnPosition(Console.WindowWidth / 2, 0, "Level " + currentLevel, ConsoleColor.White);
-            PrintOnPosition(Console.WindowWidth / 2, 1, "Score " + score, ConsoleColor.White);
-            PrintOnPosition(Console.WindowWidth / 2, 2, "Time", ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2 - 3, 0, "Level " + currentLevel, ConsoleColor.White);
+            PrintOnPosition(Console.WindowWidth / 2 - 3, 1, "Score " + score, ConsoleColor.White);
             PrintOnPosition(0, 3, "" + line, ConsoleColor.White);
         }
     }
