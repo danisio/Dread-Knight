@@ -7,6 +7,8 @@ namespace Dread_Knight
     {
         static void Main()
         {
+            SoundPlayer sound = new SoundPlayer("../../Music/intro.wav");
+            sound.PlayLooping();
             Console.BufferHeight = Console.WindowHeight = 35;
             Console.BufferWidth = Console.WindowWidth = 125;
 
