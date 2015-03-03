@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Speech.Synthesis;
 
 namespace Dread_Knight
 {
@@ -35,6 +36,12 @@ namespace Dread_Knight
             {
                 Console.Beep(498 - i * 64, 300);
             }
+            Task.Run(() =>
+            {
+                SpeechSynthesizer synth = new SpeechSynthesizer();
+                synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Senior);
+                synth.SpeakAsync("Game over!");
+            });
             Console.Beep(70, 1000);
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
