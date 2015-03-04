@@ -642,7 +642,7 @@ namespace Dread_Knight
                             playerTwoLives++;
                     }
                     else if (newBonus.str == "●")
-                        playerOneAmmo = 10;
+                        playerTwoAmmo = 10;
                 }
                 else
                 {
