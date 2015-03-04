@@ -203,6 +203,8 @@ namespace Dread_Knight
             catch (FileNotFoundException)
             {
                 Console.WriteLine("File intro.wav not found");
+                Thread.Sleep(3000);
+                return;
             }
             if (isStoped)
             {
