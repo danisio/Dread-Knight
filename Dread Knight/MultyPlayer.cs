@@ -64,6 +64,8 @@ namespace Dread_Knight
 
             DrawPlayers(isMulti);
 
+            bool musicOnOff = true;
+
             SoundPlay(false);
 
             while (true)
@@ -102,6 +104,37 @@ namespace Dread_Knight
                 while (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo pressedKey = Console.ReadKey(true);
+                    if (pressedKey.KeyChar == 'p')                              //  
+                    {                                                           //  
+                        Console.Clear();                                        //  
+                        Console.SetCursorPosition(55, 15);                      //  
+                        Console.WriteLine(           @"╔═╗╔═╗╦ ╦╔═╗╔═╗          
+                                                       ╠═╝╠═╣║ ║╚═╗║╣ 
+                                                       ╩  ╩ ╩╚═╝╚═╝╚═╝");
+                        Console.SetCursorPosition(53, 20);                      //  PAUSE
+                        Console.WriteLine("Press P to continue");               //  
+                        do                                                      //  
+                        {                                                       //  
+                            pressedKey = Console.ReadKey(true);                 //  
+                        } while (pressedKey.KeyChar != 'p');                    //  
+                        RedrawPlayfield();                                      //
+                        continue;                                               //  
+                    }                                                           //  
+                    
+                    if (pressedKey.KeyChar == 'm')                              //
+                    {                                                           //
+                        if (musicOnOff)                                         //
+                        {                                                       //
+                            SoundPlay(musicOnOff);                              //
+                            musicOnOff = false;                                 //  MUSIC ON / OFF
+                        }                                                       //
+                        else                                                    //
+                        {                                                       //
+                            SoundPlay(musicOnOff);                              //
+                            musicOnOff = true;                                  //
+                        }                                                       //
+                    }
+
                     MoveFirstPlayer(pressedKey);
                     if (isMulti)
                     {
