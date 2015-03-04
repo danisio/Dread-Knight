@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 
-
 namespace Dread_Knight
 {
     class Intro
@@ -17,7 +16,6 @@ namespace Dread_Knight
         {
             ConsoleKeyInfo pressedKey = new ConsoleKeyInfo();
             bool isFirstTime = true;
-
             do
             {
                 Console.Clear();
@@ -27,19 +25,23 @@ namespace Dread_Knight
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(70, 21);
                 Console.WriteLine("(■_■')");
-                if (isFirstTime) Thread.Sleep(950);
+                if (isFirstTime)
+                    Thread.Sleep(950);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(30, 18);
                 Console.WriteLine("── Hello, Doncho!");
-                if (isFirstTime) Thread.Sleep(950);
+                if (isFirstTime)
+                    Thread.Sleep(950);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(70, 18);
                 Console.WriteLine("── Hello, Dread Knight!");
-                if (isFirstTime) Thread.Sleep(950);
+                if (isFirstTime)
+                    Thread.Sleep(950);
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(30, 19);
                 Console.WriteLine("── Do you want some action?");
-                if (isFirstTime) Thread.Sleep(950);
+                if (isFirstTime)
+                    Thread.Sleep(950);
                 Console.SetCursorPosition(53, 10);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("   PRESS Y or N");
@@ -47,30 +49,14 @@ namespace Dread_Knight
                 pressedKey = Console.ReadKey(true);
                 isFirstTime = false;
             } while (pressedKey.Key != ConsoleKey.Y && pressedKey.Key != ConsoleKey.N);
-            
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(30, 21);
-            Console.WriteLine("('0.0)");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(70, 21);
-            Console.WriteLine("(■_■')");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(30, 18);
-            Console.WriteLine("── Hello, Doncho!");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(70, 18);
-            Console.WriteLine("── Hello, Dread Knight!");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.SetCursorPosition(30, 19);
-            Console.WriteLine("── Do you want some action?");
 
+            Console.Write(char.ToUpper(pressedKey.KeyChar));
             Console.ForegroundColor = ConsoleColor.Green;
             if (pressedKey.Key == ConsoleKey.Y)
             {
                 Console.SetCursorPosition(70, 19);
                 Console.WriteLine("── Sir, YES, Sir!");
-                Thread.Sleep(1500);
+                Thread.Sleep(2000);
                 Console.Clear();
                 return 2;
             }
@@ -78,7 +64,7 @@ namespace Dread_Knight
             {
                 Console.SetCursorPosition(70, 19);
                 Console.WriteLine("── I've got some bad news, Sir.");
-                Thread.Sleep(1500);
+                Thread.Sleep(2000);
                 Console.Clear();
                 return 1;
             }

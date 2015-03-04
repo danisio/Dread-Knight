@@ -23,14 +23,14 @@ namespace Dread_Knight
         internal static void Castle()
         {
             Console.WriteLine(@"
-
+                                                                                                                                                                                                                                                                                                                  
                                                                                                       
-                _  ___ _ _ _                     _   _ _        _                                      
-               | |/ (_) | (_)_ __   __ _        | \ | (_)_ __  (_) __ _ ___                            
-               | ' /| | | | | '_ \ / _` |       |  \| | | '_ \ | |/ _` / __|                           
-               | . \| | | | | | | | (_| |       | |\  | | | | || | (_| \__ \                           
-               |_|\_\_|_|_|_|_| |_|\__, |       |_| \_|_|_| |_|/ |\__,_|___/                           
-                                   |___/                     |__/                                                                                                  
+                                 _  ___ _ _ _                     _   _ _        _                                      
+                                | |/ (_) | (_)_ __   __ _        | \ | (_)_ __  (_) __ _ ___                            
+                                | ' /| | | | | '_ \ / _` |       |  \| | | '_ \ | |/ _` / __|                           
+                                | . \| | | | | | | | (_| |       | |\  | | | | || | (_| \__ \                           
+                                |_|\_\_|_|_|_|_| |_|\__, |       |_| \_|_|_| |_|/ |\__,_|___/                           
+                                                    |___/                     |__/                                                                                                                          
             !_                             !_                                         
             |* `--,                        |* `--,                               ^                     
             |.-`                           |.-`                                 / \                    
@@ -60,30 +60,21 @@ namespace Dread_Knight
 ");
                                                 /* New logo - even uglier :) */
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.SetCursorPosition(25, 20);
+            Console.SetCursorPosition(25, 21);
             Console.Write("▄   ▄");
-            Console.SetCursorPosition(24, 21);
+            Console.SetCursorPosition(24, 22);
             Console.Write("▀ ▀▄▀ ▀");
-            Console.SetCursorPosition(25, 22);
+            Console.SetCursorPosition(25, 23);
             Console.Write("▄▀ ▀▄");
-            Console.SetCursorPosition(26, 23);
+            Console.SetCursorPosition(26, 24);
             Console.Write("▀▄▀");
-                                                /* Old logo */
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.SetCursorPosition(26, 21); 
-            //Console.Write("/\\/\\"); 
-            //Console.SetCursorPosition(27, 22); 
-            //Console.Write("/\\"); 
-            //Console.SetCursorPosition(27, 23); 
-            //Console.Write("\\/"); 
-
         }
 
         internal static void FirstStage()
         {
             Object dreadNight = new Object();
             dreadNight.x = 100;
-            dreadNight.y = 30;
+            dreadNight.y = 31;
             dreadNight.s = "(0.0')";
             dreadNight.color = ConsoleColor.White;
 

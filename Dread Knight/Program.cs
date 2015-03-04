@@ -9,9 +9,10 @@ namespace Dread_Knight
     {
         static void Main()
         {
+            SoundPlayer sound = new SoundPlayer();
             try
             {
-                SoundPlayer sound = new SoundPlayer("../../intro.wav");
+                sound = new SoundPlayer("../../intro.wav");
                 sound.PlayLooping();
             }
             catch (FileNotFoundException)
@@ -30,9 +31,11 @@ namespace Dread_Knight
             Animation.FirstStage();
 
             int numberOfPlayers = Intro.Menu();
+            sound.Stop();
 
             if (numberOfPlayers == 1)
             {
+                
                 MultyPlayer.MultyPlay();
             }
             else

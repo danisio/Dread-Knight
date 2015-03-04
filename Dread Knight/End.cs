@@ -37,16 +37,18 @@ namespace Dread_Knight
             Task.Run(() =>
             {
                 SpeechSynthesizer synth = new SpeechSynthesizer();
+                synth.Rate = -5;
+                synth.Volume = 100;
                 synth.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Senior);
-                synth.SpeakAsync("Game over!");
+                synth.SpeakAsync("Game over lamer!");
             });
 
             Console.Beep(70, 1000);
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-           
+
             string path = "score.txt";
-            
+
             try
             {
                 if (!File.Exists(path))

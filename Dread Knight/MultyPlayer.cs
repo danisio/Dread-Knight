@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Media;
 
 namespace Dread_Knight
 {
@@ -56,18 +57,21 @@ namespace Dread_Knight
         static int playerTwoAmmo = 10;
 
         static int time = 0;
-
+        
         internal static void MultyPlay(bool isMulti = false)
         {
             Console.OutputEncoding = Encoding.Unicode;
 
             DrawPlayers(isMulti);
 
+            SoundPlay(false);
+
             while (true)
             {
                 //check if an enemy is hitted by shot
                 CollisionShotAndEnemy();
                 CollisionShotAndRock();
+
 
                 //add new enemy every "enemiesPause" step
                 if (stepEnemy % enemiesPause == 0)
@@ -104,7 +108,7 @@ namespace Dread_Knight
                         MoveSecondPlayer(pressedKey);
                     }
                 }
-
+                
                 time++;
                 if (time == 10)
                 {
@@ -113,12 +117,18 @@ namespace Dread_Knight
                 }
                 MoveShots();
 
+                if (MoveEnemies(isMulti) == 0)
+                {
+                    SoundPlay(true);
+                    End.GameOver(score);
+                }
 
-                MoveEnemies(isMulti);
-
-                MoveRocks(isMulti);
-
-
+                if (MoveRocks(isMulti) == 0)
+                {
+                    SoundPlay(true);
+                    End.GameOver(score);
+                }
+                
                 MoveBonusObject(isMulti);
 
                 // If playerOne dies, it takes player two parameters
@@ -146,6 +156,28 @@ namespace Dread_Knight
 
                 //slow down program
                 Thread.Sleep(150 - speed);
+            }
+        }
+
+        private static void SoundPlay(bool isStoped = false)
+        {
+            SoundPlayer sound = new SoundPlayer();
+            try
+            {
+                sound = new SoundPlayer("../../intro.wav");
+                sound.PlayLooping();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("File intro.wav not found");
+            }
+            if (isStoped)
+            {
+                sound.Stop();
+            }
+            else
+            {
+                sound.PlayLooping();
             }
         }
 
@@ -355,7 +387,7 @@ namespace Dread_Knight
                 {
                     playerTwoAmmo--;
                     Shoot(secondPlayer);
-                }
+                }        
             }
         }
 
@@ -380,7 +412,7 @@ namespace Dread_Knight
             shots = newListOfShots;
         }
 
-        static void MoveEnemies(bool isMulti)
+        static int MoveEnemies(bool isMulti)
         {
             List<Object> newListOfEnemies = new List<Object>();
             for (int i = 0; i < enemies.Count; i++)
@@ -391,6 +423,17 @@ namespace Dread_Knight
                 newEnemy.y = oldEnemy.y;
                 newEnemy.str = oldEnemy.str;
                 newEnemy.color = oldEnemy.color;
+
+                if (newEnemy.x == 0 && newEnemy.str.Length > 1)             //  
+                {                                                           //  
+                    string tempEnemy = string.Empty;                        //  
+                    for (int k = 1; k < newEnemy.str.Length; k++)           //  
+                    {                                                       //  Enemy gradually disappearing on the left side of the field.
+                        tempEnemy += newEnemy.str[k];                       //  
+                    }                                                       //  
+                    newEnemy.str = tempEnemy;                               //  
+                    newEnemy.x++;                                           //  
+                }                                                           //  
 
                 if (newEnemy.x <= firstPlayer.x + firstPlayer.str.Length && newEnemy.y == firstPlayer.y)
                 {
@@ -427,14 +470,16 @@ namespace Dread_Knight
             {
                 if (playerOneLives == 0)
                 {
-                    End.GameOver(score);
+                    //End.GameOver(score);
+                    return 0;
                 }
             }
             else
             {
                 if (playerOneLives == 0 && playerTwoLives == 0)
                 {
-                    End.GameOver(score);
+                    //End.GameOver(score);
+                    return 0;
                 }
                 else if (playerOneLives == 0) // First player dies - takes parameters of second player --> single player
                 {
@@ -448,6 +493,7 @@ namespace Dread_Knight
                     playerTwoDied = true;
                 }
             }
+            return 1;
         }
 
         static void ClearAllObjects(bool isMulti = false)
@@ -460,7 +506,7 @@ namespace Dread_Knight
             {
                 Console.Beep(100, 900);
             }
-            else
+            else 
             {
                 Console.Beep(300, 300);
             }
@@ -470,7 +516,7 @@ namespace Dread_Knight
             bonuses.Clear();
         }
 
-        static void MoveRocks(bool isMulti)
+        static int MoveRocks(bool isMulti, bool isOver = false)
         {
             List<Object> newListOfRocks = new List<Object>();
             for (int i = 0; i < rocks.Count; i++)
@@ -507,14 +553,14 @@ namespace Dread_Knight
             {
                 if (playerOneLives == 0)
                 {
-                    End.GameOver(score);
+                    return 0;
                 }
             }
             else
             {
                 if (playerOneLives == 0 && playerTwoLives == 0)
                 {
-                    End.GameOver(score);
+                    return 0;
                 }
                 else if (playerOneLives == 0) // First player dies - takes parameters of second player --> single player
                 {
@@ -528,6 +574,7 @@ namespace Dread_Knight
                     playerTwoDied = true;
                 }
             }
+            return 1;
         }
 
         static void MoveBonusObject(bool isMulti)
